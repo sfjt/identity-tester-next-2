@@ -8,7 +8,6 @@ export default async function RWAPage() {
   return (
     <main>
       <h2>Regular Web Application</h2>
-      <section></section>
       <section>
         <h3>Login and logout</h3>
         <LoginAndOut />
