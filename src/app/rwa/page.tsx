@@ -9,9 +9,9 @@ export default async function RWAPage() {
     <main>
       <h2>Regular Web Application</h2>
       <section>
-        <h3>Login and logout</h3>
+        <h3>Login and Logout</h3>
         <LoginAndOut />
-        <h3>Session details</h3>
+        <h3>Session Details</h3>
         <dl className={styles["session-details"]}>
           <dt>Access Token:</dt>
           <dd>{session?.tokenSet.accessToken || "N/A"}</dd>
