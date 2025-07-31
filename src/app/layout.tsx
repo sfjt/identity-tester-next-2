@@ -21,6 +21,9 @@ export default function RootLayout({
             <li>
               <a href="/rwa">Regular Web Application</a>
             </li>
+            <li>
+              <a href="/spa/auth0-spa-js">Single Page Application (auth0-spa-js)</a>
+            </li>
           </ul>
         </header>
         {children}

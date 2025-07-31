@@ -1,12 +1,3 @@
-.login-logout-list li {
-  margin-top: 1em;
-}
-
-.session-details dt {
-  margin: 0.5rem 1rem;
-  font-weight: bold;
-}
-
 .custom-params-label {
   cursor: pointer;
   text-decoration: underline;

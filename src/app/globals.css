@@ -9,3 +9,12 @@ header {
 main {
   margin: 1rem 3rem;
 }
+
+li button {
+  margin-top: 0.5rem;
+}
+
+dt {
+  margin: 0.5rem 0;
+  font-weight: bold;
+}

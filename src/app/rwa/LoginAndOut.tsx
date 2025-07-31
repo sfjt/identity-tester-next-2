@@ -23,9 +23,9 @@ export default function LoginAndOut() {
     return <p>Loading...</p>
   }
 
-  const defaultReturnTo = `${data.appBaseURL}/rwa`
-  const v2LogoutURL = `https://${data.auth0Domain}/v2/logout`
-  const oidcLogoutURL = `https://${data.auth0Domain}/oidc/logout`
+  const defaultReturnTo = `${data.app_base_url}/rwa`
+  const v2LogoutURL = `https://${data.auth0_domain}/v2/logout`
+  const oidcLogoutURL = `https://${data.auth0_domain}/oidc/logout`
 
   function login() {
     window.location.href = addParams("/auth/login")
@@ -74,7 +74,7 @@ export default function LoginAndOut() {
 
   return (
     <div>
-      <ul className={styles["login-logout-list"]}>
+      <ul>
         <li>
           <button onClick={login}>Login</button>
         </li>

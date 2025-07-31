@@ -12,7 +12,7 @@ export default async function RWAPage() {
         <h3>Login and Logout</h3>
         <LoginAndOut />
         <h3>Session Details</h3>
-        <dl className={styles["session-details"]}>
+        <dl>
           <dt>Access Token:</dt>
           <dd>{session?.tokenSet.accessToken || "N/A"}</dd>
           <dt>ID Token:</dt>
