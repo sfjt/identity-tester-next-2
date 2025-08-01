@@ -38,9 +38,9 @@ export const auth0 = new Auth0Client({
 
       tasks.push(redis.set<SessionData>(id, sessionData, { exat: expiresAt }))
 
-      const result = await Promise.allSettled(tasks)
-      result.filter(data => data.status === "rejected").forEach( data => {
-        console.error(`${data.status}: ${data.reason}`)
+      const results = await Promise.allSettled(tasks)
+      results.filter(result => result.status === "rejected").forEach( result => {
+        console.error(`${result.status}: ${result.reason}`)
       })
     },
     async delete(id) {
@@ -70,9 +70,9 @@ export const auth0 = new Auth0Client({
         }
       }
 
-      const result = await Promise.allSettled(tasks)
-      result.filter(data => data.status === "rejected").forEach( data => {
-        console.error(`${data.status}: ${data.reason}`)
+      const results = await Promise.allSettled(tasks)
+      results.filter(result => result.status === "rejected").forEach( result => {
+        console.error(`${result.status}: ${result.reason}`)
       })
     },
   },
