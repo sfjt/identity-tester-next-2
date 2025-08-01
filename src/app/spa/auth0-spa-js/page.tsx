@@ -7,8 +7,8 @@ import useSWRImmutable from "swr/immutable"
 
 import fetchConfig from "@/lib/fetchConfig"
 
-async function createClient(uri: string) {
-  const config = await fetchConfig(uri)
+async function createClient() {
+  const config = await fetchConfig("/api/config")
   const client = await createAuth0Client({
     domain: config.auth0_domain,
     clientId: config.spa_client_id,
@@ -64,7 +64,7 @@ interface ISession {
 }
 
 export default function Page() {
-  const { data, error, isLoading } = useSWRImmutable("/api/config", createClient)
+  const { data, error, isLoading } = useSWRImmutable("/spa/auth0-spa-js", createClient)
   const [state, setState] = useState<ISession>({
     idToken: undefined,
     accessToken: undefined,

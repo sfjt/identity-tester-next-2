@@ -10,6 +10,8 @@ export default async function RWAPage() {
       <section>
         <h3>Login and Logout</h3>
         <LoginAndOut />
+      </section>
+      <section>
         <h3>Session Details</h3>
         <dl>
           <dt>Access Token:</dt>
