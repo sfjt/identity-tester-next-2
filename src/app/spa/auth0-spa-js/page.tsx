@@ -72,10 +72,18 @@ export default function Page() {
 
   if (error) {
     console.error(error)
-    return <p>Something went wrong.</p>
+    return (
+      <main>
+        <p>Something went wrong.</p>
+      </main>
+    )
   }
   if (isLoading || !data) {
-    return <p>Loading...</p>
+    return (
+      <main>
+        <p>Loading...</p>
+      </main>
+    )
   }
 
   const { client } = data
