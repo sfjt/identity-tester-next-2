@@ -31,7 +31,7 @@ export const auth0 = new Auth0Client({
       const sidMaxExp = idsBySid.expiresAt > expiresAt ? idsBySid.expiresAt : expiresAt
       tasks.push(
         redis.set<IdsArray>(
-          `sid:${id}`,
+          `sid:${sid}`,
           { ids: [...new Set(idsBySid.ids)], expiresAt: sidMaxExp },
           { exat: sidMaxExp },
         ),
