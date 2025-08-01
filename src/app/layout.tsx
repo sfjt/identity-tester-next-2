@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 
 import "@/app/globals.css"
+import LoginToMFATester from "./LoginToMFATester"
 
 export const metadata: Metadata = {
   title: "Identity Tester",
@@ -23,6 +24,9 @@ export default function RootLayout({
             </li>
             <li>
               <a href="/spa/auth0-spa-js">Single Page Application (auth0-spa-js)</a>
+            </li>
+            <li>
+              <LoginToMFATester />
             </li>
           </ul>
         </header>
