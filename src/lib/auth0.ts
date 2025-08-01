@@ -12,7 +12,7 @@ const redis = Redis.fromEnv()
 export const auth0 = new Auth0Client({
   sessionStore: {
     async get(id) {
-      try{
+      try {
         return await redis.get<SessionData>(id)
       } catch (err) {
         console.error(err)
@@ -26,22 +26,36 @@ export const auth0 = new Auth0Client({
 
       const tasks: Array<Promise<IdsArray | SessionData | "OK" | null>> = []
 
-      const idsBySid = await redis.get<IdsArray>(`sid:${sid}`) || {ids: [], expiresAt: 0}
+      const idsBySid = (await redis.get<IdsArray>(`sid:${sid}`)) || { ids: [], expiresAt: 0 }
       idsBySid.ids.push(id)
       const sidMaxExp = idsBySid.expiresAt > expiresAt ? idsBySid.expiresAt : expiresAt
-      tasks.push(redis.set<IdsArray>(`sid:${id}`, { ids: [...new Set(idsBySid.ids)], expiresAt: sidMaxExp }, { exat: sidMaxExp }))
+      tasks.push(
+        redis.set<IdsArray>(
+          `sid:${id}`,
+          { ids: [...new Set(idsBySid.ids)], expiresAt: sidMaxExp },
+          { exat: sidMaxExp },
+        ),
+      )
 
-      const idsBySub = await redis.get<IdsArray>(`sub:${sub}`) || {ids: [], expiresAt: 0}
+      const idsBySub = (await redis.get<IdsArray>(`sub:${sub}`)) || { ids: [], expiresAt: 0 }
       idsBySub.ids.push(id)
       const subMaxExp = idsBySub.expiresAt > expiresAt ? idsBySub.expiresAt : expiresAt
-      tasks.push(redis.set<IdsArray>(`sub:${sub}`, { ids: [...new Set(idsBySub.ids)], expiresAt: subMaxExp }, { exat: subMaxExp }))
+      tasks.push(
+        redis.set<IdsArray>(
+          `sub:${sub}`,
+          { ids: [...new Set(idsBySub.ids)], expiresAt: subMaxExp },
+          { exat: subMaxExp },
+        ),
+      )
 
       tasks.push(redis.set<SessionData>(id, sessionData, { exat: expiresAt }))
 
       const results = await Promise.allSettled(tasks)
-      results.filter(result => result.status === "rejected").forEach( result => {
-        console.error(`${result.status}: ${result.reason}`)
-      })
+      results
+        .filter((result) => result.status === "rejected")
+        .forEach((result) => {
+          console.error(`${result.status}: ${result.reason}`)
+        })
     },
     async delete(id) {
       try {
@@ -55,7 +69,7 @@ export const auth0 = new Auth0Client({
       if (sid) {
         const idsBySid = await redis.get<IdsArray>(`sid:${sid}`)
         if (idsBySid) {
-          idsBySid.ids.forEach(id => {
+          idsBySid.ids.forEach((id) => {
             tasks.push(redis.del(id))
           })
         }
@@ -64,16 +78,18 @@ export const auth0 = new Auth0Client({
       if (sub) {
         const idsBySub = await redis.get<IdsArray>(`sub:${sub}`)
         if (idsBySub) {
-          idsBySub.ids.forEach(id => {
+          idsBySub.ids.forEach((id) => {
             tasks.push(redis.del(id))
           })
         }
       }
 
       const results = await Promise.allSettled(tasks)
-      results.filter(result => result.status === "rejected").forEach( result => {
-        console.error(`${result.status}: ${result.reason}`)
-      })
+      results
+        .filter((result) => result.status === "rejected")
+        .forEach((result) => {
+          console.error(`${result.status}: ${result.reason}`)
+        })
     },
   },
 })
