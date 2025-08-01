@@ -23,7 +23,6 @@ export default function LoginAndOut() {
     return <p>Loading...</p>
   }
 
-  const defaultReturnTo = `${data.app_base_url}/rwa`
   const v2LogoutURL = `https://${data.auth0_domain}/v2/logout`
   const oidcLogoutURL = `https://${data.auth0_domain}/oidc/logout`
 
@@ -38,7 +37,10 @@ export default function LoginAndOut() {
   function addParams(route: string) {
     const params = new URLSearchParams(state.params)
     if (!params.has("returnTo")) {
-      params.append("returnTo", defaultReturnTo)
+      params.append("returnTo", window.location.href)
+    }
+    if (!params.has("audience") && typeof data.default_audience === "string") {
+      params.append("audience", data.default_audience)
     }
     return `${route}?${params.toString()}`
   }
