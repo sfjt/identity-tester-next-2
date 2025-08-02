@@ -38,6 +38,8 @@
 ├── middleware.ts           # Auth0 middleware for all routes
 ├── switchenv.mjs          # Environment switching utility
 └── src/
+    ├── components/
+    │   └── ErrorBoundary.tsx # Generic React Error Boundary component
     ├── lib/
     │   ├── auth0.ts       # Custom Redis session store
     │   └── fetchConfig.ts # API config fetcher
@@ -58,7 +60,7 @@
 
 #### **1. Root Layout (`/layout.tsx`)**
 ```
-// Features:
+Features:
 - Global navigation header with 32px prominent site title
 - Navigation links to all auth flows
 - Consistent .app-container styling
@@ -67,14 +69,14 @@
 
 #### **2. Home Page (`/page.tsx`)**
 ```
-// Status: Empty React fragment - minimal placeholder
-// Returns: <></>
+Status: Empty React fragment - minimal placeholder
+Returns: <></>
 ```
 
 #### **3. Regular Web Application (`/rwa/`)**
 ```
-// Files: page.tsx, LoginAndOut.tsx, rwa.module.css
-// Features:
+Files: page.tsx, LoginAndOut.tsx, rwa.module.css
+Features:
 - Server-side Auth0 authentication flow
 - Custom login/logout parameters editor (JSON textarea)
 - Session token display (access, ID, refresh tokens)
@@ -83,8 +85,8 @@
 
 #### **4. SPA auth0-spa-js (`/spa/auth0-spa-js/`)**
 ```
-// Files: page.tsx
-// Features:
+Files: page.tsx
+Features:
 - Client-side authentication using @auth0/auth0-spa-js
 - Login with redirect and popup flows
 - Silent token refresh functionality
@@ -93,24 +95,27 @@
 
 #### **5. SPA Auth0 Lock (`/spa/lock/`)**
 ```
-// Files: route.ts (API route)
-// Features:
-- Serves static lock.html from public directory
+Files: route.ts (API route), lock.html
+Features:
+- Serves lock.html from src/app/spa/lock/ directory
 - Route handler returns HTML with proper content-type headers
+- In-memory session storage
 ```
 
 #### **6. MFA API Tester (`/mfa/`)**
 ```
-// Files: page.tsx, Authenticators.tsx, OTPEnrollment.tsx, PushEnrollment.tsx, mfa.module.css
-// Features:
+Files: page.tsx, Authenticators.tsx, OTPEnrollment.tsx, PushEnrollment.tsx, MFAErrorFallback.tsx, mfa.module.css
+Features:
 - Protected route (withPageAuthRequired)
+- Error boundaries for graceful error handling and isolated component failures
 - Expandable sections for better UX organization
-- Three main components:
+- Three main components with individual error isolation:
   1. Authenticators: List/manage enrolled authenticators with delete functionality
   2. OTP Enrollment: Complete TOTP authenticator enrollment with QR codes
   3. Push Enrollment: Guardian app enrollment with real-time polling
 - Structured data display using dl/dt/dd elements
 - Auto-refresh authenticator list after enrollment/deletion
+- MFA-specific error fallback with troubleshooting guidance
 - CSS module for component-specific styling
 ```
 
@@ -148,14 +153,15 @@ Auth0 Grant: http://auth0.com/oauth/grant-type/mfa-oob
 
 ### **Static Assets**
 
-#### **Auth0 Lock HTML (`/public/lock.html`)**
+#### **Auth0 Lock HTML (`/src/app/spa/lock/lock.html`)**
 ```
 Features:
 - Standalone HTML page with Auth0 Lock integration
 - Dynamic config fetching from /api/config
 - Complete auth flow (login, logout, token display)
-- Local storage session persistence
+- In-memory session persistence (authData object)
 - Error handling and loading states
+- Roboto font integration
 - 2-space indentation, double quotes, minimal semicolons
 ```
 
@@ -179,9 +185,16 @@ Text handling:
 - pre elements with proper word wrapping and overflow handling
 - Prevents text overflow in token displays and long URIs
 
+Error boundary styling:
+- .error-boundary (red background, bordered container)
+- .error-details (collapsible technical details)
+- .error-actions (button group for recovery actions)
+- Consistent error styling across components
+
 Color Scheme:
 - Primary: #007bff (Bootstrap blue)
 - Danger: #dc3545 (Bootstrap red)  
+- Error Boundary: #f8d7da (Light red background)
 - Secondary: #6c757d (Bootstrap gray)
 - Background: #f5f5f5 (Light gray)
 - Text: #333 (Dark gray)
@@ -218,7 +231,7 @@ Color Scheme:
 - Auth0 Lock v14.0.0 via CDN
 - Customizable authentication widget
 - Embedded authentication UI
-- Session persistence in localStorage
+- In-memory session storage for security
 
 ### **4. MFA API Testing**
 - **Authenticator Management**: List, view, and delete enrolled authenticators
@@ -277,23 +290,34 @@ Color Scheme:
 ## **Environment Configuration**
 
 ### **Required Environment Variables**
+
+#### **Public Configuration (Safe for Client-Side)**
+
 ```
-# Auth0 Core Config
-AUTH0_DOMAIN=
-AUTH0_CLIENT_ID=
-AUTH0_CLIENT_SECRET=
-AUTH0_SECRET=
+AUTH0_DOMAIN=                    # Auth0 tenant domain
+AUTH0_CLIENT_ID=                 # OAuth client ID
 
 # Application Config  
-APP_BASE_URL=
-SPA_CLIENT_ID=
-DEFAULT_AUDIENCE=
-MFA_API_AUDIENCE=
-
-# Redis (Upstash)
-UPSTASH_REDIS_REST_URL=
-UPSTASH_REDIS_REST_TOKEN=
+APP_BASE_URL=                    # Application URL
+SPA_CLIENT_ID=                   # SPA client ID
+DEFAULT_AUDIENCE=                # API audience identifier
+MFA_API_AUDIENCE=                # MFA API audience
 ```
+
+#### **SECRET Variables (Server-Side Only - NEVER Expose to Frontend)**
+```
+# CRITICAL SECRETS - Must remain server-side only
+AUTH0_CLIENT_SECRET=             # 🔒 SECRET: OAuth client secret
+AUTH0_SECRET=                    # 🔒 SECRET: Session encryption key
+UPSTASH_REDIS_REST_TOKEN=        # 🔒 SECRET: Redis authentication token
+UPSTASH_REDIS_REST_URL=          # 🔒 PRIVATE: Redis endpoint (better kept server-side)
+```
+
+**⚠️ Security Note**: The SECRET variables above must NEVER be exposed to:
+- Client-side JavaScript code
+- Browser network logs or dev tools
+- Frontend bundle files
+- Environment variables with `NEXT_PUBLIC_` prefix
 
 ### **Environment Management**
 - `switchenv.mjs` utility for switching between environment files
@@ -324,6 +348,11 @@ UPSTASH_REDIS_REST_TOKEN=
 ### **Component Architecture**
 - Server components for protected routes (`withPageAuthRequired`)
 - Client components for interactive auth flows
+- **Error Boundaries**: React error boundaries for graceful error handling
+  - Generic `ErrorBoundary` component (`/src/components/ErrorBoundary.tsx`)
+  - MFA-specific error fallback (`/src/app/mfa/MFAErrorFallback.tsx`)
+  - Isolated error containment per MFA component section
+  - User-friendly error messages with troubleshooting guidance
 - Consistent error/loading state handling
 - Reusable styling through global CSS classes
 
