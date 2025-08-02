@@ -2,11 +2,6 @@ import { Auth0Client } from "@auth0/nextjs-auth0/server"
 import { Redis } from "@upstash/redis"
 import { SessionData } from "@auth0/nextjs-auth0/types"
 
-interface IdsArray {
-  ids: Array<string>
-  expiresAt: number
-}
-
 const redis = Redis.fromEnv()
 
 export const auth0 = new Auth0Client({
@@ -24,38 +19,13 @@ export const auth0 = new Auth0Client({
       const { sid } = sessionData.internal
       const { sub } = sessionData.user
 
-      const tasks: Array<Promise<IdsArray | SessionData | "OK" | null>> = []
+      await redis.sadd(`sid:${sid}`, id)
+      await redis.expire(`sid:${sid}`, expiresAt)
 
-      const idsBySid = (await redis.get<IdsArray>(`sid:${sid}`)) || { ids: [], expiresAt: 0 }
-      idsBySid.ids.push(id)
-      const sidMaxExp = idsBySid.expiresAt > expiresAt ? idsBySid.expiresAt : expiresAt
-      tasks.push(
-        redis.set<IdsArray>(
-          `sid:${sid}`,
-          { ids: [...new Set(idsBySid.ids)], expiresAt: sidMaxExp },
-          { exat: sidMaxExp },
-        ),
-      )
+      await redis.sadd(`sub:${sub}`, id)
+      await redis.expire(`sub:${sub}`, expiresAt)
 
-      const idsBySub = (await redis.get<IdsArray>(`sub:${sub}`)) || { ids: [], expiresAt: 0 }
-      idsBySub.ids.push(id)
-      const subMaxExp = idsBySub.expiresAt > expiresAt ? idsBySub.expiresAt : expiresAt
-      tasks.push(
-        redis.set<IdsArray>(
-          `sub:${sub}`,
-          { ids: [...new Set(idsBySub.ids)], expiresAt: subMaxExp },
-          { exat: subMaxExp },
-        ),
-      )
-
-      tasks.push(redis.set<SessionData>(id, sessionData, { exat: expiresAt }))
-
-      const results = await Promise.allSettled(tasks)
-      results
-        .filter((result) => result.status === "rejected")
-        .forEach((result) => {
-          console.error(`${result.status}: ${result.reason}`)
-        })
+      await redis.set<SessionData>(id, sessionData, { exat: expiresAt })
     },
     async delete(id) {
       try {
@@ -66,22 +36,19 @@ export const auth0 = new Auth0Client({
     },
     async deleteByLogoutToken({ sid, sub }) {
       const tasks: Array<Promise<number>> = []
+
       if (sid) {
-        const idsBySid = await redis.get<IdsArray>(`sid:${sid}`)
-        if (idsBySid) {
-          idsBySid.ids.forEach((id) => {
-            tasks.push(redis.del(id))
-          })
-        }
+        const sessionIds = await redis.smembers(`sid:${sid}`)
+        sessionIds.forEach((id) => {
+          tasks.push(redis.del(id))
+        })
       }
 
       if (sub) {
-        const idsBySub = await redis.get<IdsArray>(`sub:${sub}`)
-        if (idsBySub) {
-          idsBySub.ids.forEach((id) => {
-            tasks.push(redis.del(id))
-          })
-        }
+        const sessionIds = await redis.smembers(`sub:${sub}`)
+        sessionIds.forEach((id) => {
+          tasks.push(redis.del(id))
+        })
       }
 
       const results = await Promise.allSettled(tasks)

@@ -41,9 +41,10 @@
 ```
 
 ### **Authentication Setup**
-- **Redis Session Store**: Custom implementation with sophisticated session management
-  - Tracks sessions by `sid` (session ID) and `sub` (subject/user ID)
-  - Handles session expiration and cleanup
+- **Redis Session Store**: Custom implementation with optimized session management
+  - Uses Redis Sets (`SADD`/`SMEMBERS`) for inverted indexes tracking sessions by `sid` and `sub`
+  - Sequential session creation for simplicity and reliability
+  - Supports OIDC Back-channel logout via inverted index lookups
   - Uses Upstash Redis for persistence
 - **Middleware**: Auth0 middleware applied to all routes except static assets
 
@@ -52,7 +53,7 @@
 ### **Main Routes**
 
 #### **1. Root Layout (`/layout.tsx`)**
-```typescript
+```
 // Features:
 - Global navigation header with 32px prominent site title
 - Navigation links to all auth flows
@@ -61,13 +62,13 @@
 ```
 
 #### **2. Home Page (`/page.tsx`)**
-```typescript
+```
 // Status: Empty React fragment - minimal placeholder
 // Returns: <></>
 ```
 
 #### **3. Regular Web Application (`/rwa/`)**
-```typescript
+```
 // Files: page.tsx, LoginAndOut.tsx, rwa.module.css
 // Features:
 - Server-side Auth0 authentication flow
@@ -77,7 +78,7 @@
 ```
 
 #### **4. SPA auth0-spa-js (`/spa/auth0-spa-js/`)**
-```typescript
+```
 // Files: page.tsx
 // Features:
 - Client-side authentication using @auth0/auth0-spa-js
@@ -87,7 +88,7 @@
 ```
 
 #### **5. SPA Auth0 Lock (`/spa/lock/`)**
-```typescript
+```
 // Files: route.ts (API route)
 // Features:
 - Serves static lock.html from public directory
@@ -95,7 +96,7 @@
 ```
 
 #### **6. MFA API Tester (`/mfa/`)**
-```typescript
+```
 // Files: page.tsx, Authenticators.tsx
 // Features:
 - Protected route (withPageAuthRequired)
@@ -107,7 +108,7 @@
 ### **API Routes**
 
 #### **Configuration API (`/api/config/route.ts`)**
-```typescript
+```javascript
 // Returns:
 {
   auth0_domain: process.env.AUTH0_DOMAIN,
@@ -120,7 +121,7 @@
 ### **Static Assets**
 
 #### **Auth0 Lock HTML (`/public/lock.html`)**
-```html
+```
 // Features:
 - Standalone HTML page with Auth0 Lock integration
 - Dynamic config fetching from /api/config
@@ -133,7 +134,7 @@
 ## **Styling Architecture**
 
 ### **Global CSS (`/src/app/globals.css`)**
-```css
+```
 /* Core Design System */
 - Roboto font family (Google Fonts)
 - 800px max-width container
@@ -190,7 +191,7 @@
 ## **Environment Configuration**
 
 ### **Required Environment Variables**
-```bash
+```
 # Auth0 Core Config
 AUTH0_DOMAIN=
 AUTH0_CLIENT_ID=
@@ -227,10 +228,11 @@ UPSTASH_REDIS_REST_TOKEN=
 - Custom `fetchConfig` utility for API config
 
 ### **Session Management**
-- Redis-based session storage with custom implementation
-- Session tracking by both session ID and user ID
-- Automatic cleanup and expiration handling
-- Support for logout token-based session invalidation
+- Redis-based session storage using Redis Sets for inverted indexes
+- Session tracking by both `sid` (session ID) and `sub` (subject/user ID) via `SADD`
+- Sequential session creation with automatic expiration via `EXPIRE`
+- OIDC Back-channel logout support using `SMEMBERS` for session lookups
+- Simplified implementation prioritizing reliability over performance
 
 ### **Component Architecture**
 - Server components for protected routes (`withPageAuthRequired`)
