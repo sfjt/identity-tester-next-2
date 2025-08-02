@@ -230,9 +230,9 @@ UPSTASH_REDIS_REST_TOKEN=
 ### **Session Management**
 - Redis-based session storage using Redis Sets for inverted indexes
 - Session tracking by both `sid` (session ID) and `sub` (subject/user ID) via `SADD`
-- Sequential session creation with automatic expiration via `EXPIRE`
-- OIDC Back-channel logout support using `SMEMBERS` for session lookups
-- Simplified implementation prioritizing reliability over performance
+- Smart TTL management: extends inverted index expiration to longest session lifetime
+- OIDC Back-channel logout with proper cleanup using `SREM` to maintain data consistency
+- Sequential implementation prioritizing data integrity and reliability
 
 ### **Component Architecture**
 - Server components for protected routes (`withPageAuthRequired`)
