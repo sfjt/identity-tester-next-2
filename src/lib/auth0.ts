@@ -19,12 +19,17 @@ export const auth0 = new Auth0Client({
       const { sid } = sessionData.internal
       const { sub } = sessionData.user
 
-      try {
-        await redis.sadd(`sid:${sid}`, id)
-        await redis.expire(`sid:${sid}`, Math.max(expiresAt, await redis.ttl(`sid:${sid}`)))
+      const sidKey = `sid:${sid}`
+      const subKey = `sub:${sub}`
 
-        await redis.sadd(`sub:${sub}`, id)
-        await redis.expire(`sub:${sub}`, Math.max(expiresAt, await redis.ttl(`sub:${sub}`)))
+      try {
+        await redis.sadd(sidKey, id)
+        const sidExp = (await redis.scard(sidKey)) === 1 ? expiresAt : Math.max(expiresAt, await redis.ttl(sidKey))
+        await redis.expire(sidKey, sidExp)
+
+        await redis.sadd(subKey, id)
+        const subExp = (await redis.scard(subKey)) === 1 ? expiresAt : Math.max(expiresAt, await redis.ttl(subKey))
+        await redis.expire(subKey, subExp)
 
         await redis.set<SessionData>(id, sessionData, { exat: expiresAt })
       } catch (err) {
@@ -42,24 +47,26 @@ export const auth0 = new Auth0Client({
       const tasks: Array<Promise<void>> = []
 
       if (sid) {
-        const sessionIds = await redis.smembers(`sid:${sid}`)
+        const sidKey = `sid:${sid}`
+        const sessionIds = await redis.smembers(sidKey)
         sessionIds.forEach((id) => {
           tasks.push(
             (async () => {
               await redis.del(id)
-              await redis.srem(`sid:${sid}`, id)
+              await redis.srem(sidKey, id)
             })(),
           )
         })
       }
 
       if (sub) {
-        const sessionIds = await redis.smembers(`sub:${sub}`)
+        const subKey = `sub:${sub}`
+        const sessionIds = await redis.smembers(subKey)
         sessionIds.forEach((id) => {
           tasks.push(
             (async () => {
               await redis.del(id)
-              await redis.srem(`sub:${sub}`, id)
+              await redis.srem(subKey, id)
             })(),
           )
         })
