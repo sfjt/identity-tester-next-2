@@ -331,6 +331,7 @@ UPSTASH_REDIS_REST_URL=          # 🔒 PRIVATE: Redis endpoint (better kept ser
 - **CSS**: 2-space indentation, kebab-case classes
 - **HTML**: 2-space indentation, double quotes
 - **JavaScript**: 2-space indentation, double quotes, minimal semicolons
+- **Styling**: Prefer CSS files (globals.css or CSS modules) over inline styles in TSX files for better maintainability and separation of concerns
 
 ### **Data Fetching Patterns**
 - **SWR** for client-side data fetching with caching
