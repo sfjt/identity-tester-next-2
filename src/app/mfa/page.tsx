@@ -12,19 +12,19 @@ export default withPageAuthRequired(() => {
     <main>
       <h2>MFA API Tester</h2>
 
-      <ErrorBoundary fallback={<MFAErrorFallback componentName="Authenticators" />}>
+      <ErrorBoundary fallback={(error) => <MFAErrorFallback error={error} componentName="Authenticators" />}>
         <section className="section">
           <Authenticators />
         </section>
       </ErrorBoundary>
 
-      <ErrorBoundary fallback={<MFAErrorFallback componentName="OTP Enrollment" />}>
+      <ErrorBoundary fallback={(error) => <MFAErrorFallback error={error} componentName="OTP Enrollment" />}>
         <section className="section">
           <OTPEnrollment />
         </section>
       </ErrorBoundary>
 
-      <ErrorBoundary fallback={<MFAErrorFallback componentName="Push Enrollment" />}>
+      <ErrorBoundary fallback={(error) => <MFAErrorFallback error={error} componentName="Push Enrollment" />}>
         <section className="section">
           <PushEnrollment />
         </section>

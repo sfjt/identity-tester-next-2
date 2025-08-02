@@ -4,7 +4,7 @@ import React, { Component, ErrorInfo, ReactNode } from "react"
 
 interface Props {
   children: ReactNode
-  fallback?: ReactNode
+  fallback?: ReactNode | ((error: Error) => ReactNode)
   onError?: (error: Error, errorInfo: ErrorInfo) => void
 }
 
@@ -29,9 +29,15 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   render() {
-    if (this.state.hasError) {
-      return (
-        this.props.fallback || (
+    if (this.state.hasError && this.state.error) {
+      const fallback = this.props.fallback
+      
+      if (typeof fallback === 'function') {
+        return fallback(this.state.error)
+      } else if (fallback) {
+        return fallback
+      } else {
+        return (
           <div className="error-boundary">
             <h3>Something went wrong</h3>
             <p>An unexpected error occurred. Please try refreshing the page.</p>
@@ -50,7 +56,7 @@ export class ErrorBoundary extends Component<Props, State> {
             </div>
           </div>
         )
-      )
+      }
     }
 
     return this.props.children

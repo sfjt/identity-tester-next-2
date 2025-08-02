@@ -350,9 +350,15 @@ UPSTASH_REDIS_REST_URL=          # 🔒 PRIVATE: Redis endpoint (better kept ser
 - Client components for interactive auth flows
 - **Error Boundaries**: React error boundaries for graceful error handling
   - Generic `ErrorBoundary` component (`/src/components/ErrorBoundary.tsx`)
+    - Supports both static fallback components and render functions
+    - Render functions receive the caught error for detailed error reporting
+    - Usage: `fallback={(error) => <CustomErrorComponent error={error} />}`
   - MFA-specific error fallback (`/src/app/mfa/MFAErrorFallback.tsx`)
+    - Displays technical details when error object is provided
+    - Expandable error details with stack trace information
+    - Component-specific troubleshooting guidance
   - Isolated error containment per MFA component section
-  - User-friendly error messages with troubleshooting guidance
+  - User-friendly error messages with detailed technical information
 - Consistent error/loading state handling
 - Reusable styling through global CSS classes
 
@@ -386,5 +392,19 @@ npm run switchenv <file> # Switch environment files
 - All auth flows share the same `/api/config` endpoint for configuration
 - Redis session store provides persistent sessions across server restarts
 - Global CSS classes ensure consistent styling across all auth flows
+
+### **CLAUDE.md Maintenance Guidelines**
+
+**Always update CLAUDE.md when:**
+- **Architecture Changes**: Component structure, error boundaries, or data flow patterns are modified
+- **New Features**: Adding new authentication flows, API routes, or major components
+- **Environment Variables**: Adding, removing, or changing required environment configuration
+- **Development Workflow**: Changes to build scripts, linting rules, or development commands
+- **Security Updates**: New security considerations, authentication patterns, or secret handling
+- **Styling Patterns**: Updates to CSS architecture, design system, or component styling conventions
+- **Dependency Changes**: Major framework updates, new libraries, or changed development tools
+- **File Structure**: Moving files, changing routing patterns, or reorganizing the codebase
+
+**Documentation should reflect the current state** - keep technical details accurate and comprehensive for effective development and maintenance.
 
 This repository represents a comprehensive Auth0 testing platform with modern Next.js architecture, multiple authentication patterns, and consistent design system implementation.
