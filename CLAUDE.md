@@ -230,7 +230,8 @@ UPSTASH_REDIS_REST_TOKEN=
 ### **Session Management**
 - Redis-based session storage using Redis Sets for inverted indexes
 - Session tracking by both `sid` (session ID) and `sub` (subject/user ID) via `SADD`
-- Smart TTL management: extends inverted index expiration to longest session lifetime
+- Intelligent TTL management: uses `SCARD` to detect new indexes, extends existing ones to longest session lifetime
+- Proper timestamp handling: converts absolute expiration to relative seconds for Redis TTL
 - OIDC Back-channel logout with proper cleanup using `SREM` to maintain data consistency
 - Sequential implementation prioritizing data integrity and reliability
 
