@@ -357,6 +357,10 @@ UPSTASH_REDIS_REST_URL=          # 🔒 PRIVATE: Redis endpoint (better kept ser
     - Displays technical details when error object is provided
     - Expandable error details with stack trace information
     - Component-specific troubleshooting guidance
+  - **Reusable Error Fallback Pattern** (`/src/app/mfa/page.tsx`)
+    - `createMFAErrorFallback()` helper function eliminates code duplication
+    - Automatically assigns ESLint-compliant display names for debugging
+    - Usage: `fallback={createMFAErrorFallback("Component Name")}`
   - Isolated error containment per MFA component section
   - User-friendly error messages with detailed technical information
 - Consistent error/loading state handling
@@ -406,5 +410,11 @@ npm run switchenv <file> # Switch environment files
 - **File Structure**: Moving files, changing routing patterns, or reorganizing the codebase
 
 **Documentation should reflect the current state** - keep technical details accurate and comprehensive for effective development and maintenance.
+
+**Post-Commit Workflow:**
+- **Always review CLAUDE.md after creating commits** - ensure changes are properly documented
+- **Update documentation immediately** if changes aren't reflected in CLAUDE.md
+- **Include documentation updates in follow-up commits** when necessary
+- This ensures the technical memo stays synchronized with the actual codebase state
 
 This repository represents a comprehensive Auth0 testing platform with modern Next.js architecture, multiple authentication patterns, and consistent design system implementation.
