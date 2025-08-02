@@ -26,9 +26,11 @@
 - **@upstash/redis v1.35.2** - Session storage backend
 
 ### **Development Tools**
-- **ESLint 9.x** with Next.js config
+- **ESLint 9.x** with Next.js config (`eslint.config.mjs`)
 - **Prettier 3.6.2** for code formatting
+- **TypeScript 5.x** with strict configuration
 - Custom `switchenv.mjs` for environment switching
+- **@eslint/eslintrc** for legacy config support
 
 ## **Architecture & File Structure**
 
@@ -37,13 +39,21 @@
 ├── next.config.ts          # Minimal Next.js config
 ├── middleware.ts           # Auth0 middleware for all routes
 ├── switchenv.mjs          # Environment switching utility
+├── eslint.config.mjs      # ESLint 9.x configuration
+├── tsconfig.json          # TypeScript configuration
 └── src/
     ├── components/
     │   └── ErrorBoundary.tsx # Generic React Error Boundary component
     ├── lib/
     │   ├── auth0.ts       # Custom Redis session store
     │   └── fetchConfig.ts # API config fetcher
-    └── app/               # Next.js App Router structure
+    ├── middleware.ts      # Auth0 middleware implementation
+    └── app/
+        ├── LoginToMFATester.tsx # MFA login component
+        ├── globals.css    # Global styles
+        ├── layout.tsx     # Root layout
+        ├── page.tsx       # Home page
+        └── [routes]/      # App Router structure
 ```
 
 ### **Authentication Setup**
@@ -59,65 +69,63 @@
 ### **Main Routes**
 
 #### **1. Root Layout (`/layout.tsx`)**
-```
-Features:
+
+**Features:**
 - Global navigation header with 32px prominent site title
 - Navigation links to all auth flows
-- Consistent .app-container styling
+- Consistent `.app-container` styling
 - LoginToMFATester component integration
-```
 
 #### **2. Home Page (`/page.tsx`)**
-```
-Status: Empty React fragment - minimal placeholder
-Returns: <></>
-```
+
+- **Status**: Empty React fragment - minimal placeholder
+- **Returns**: `<></>`
 
 #### **3. Regular Web Application (`/rwa/`)**
-```
-Files: page.tsx, LoginAndOut.tsx, rwa.module.css
-Features:
+
+**Files**: `page.tsx`, `LoginAndOut.tsx`, `rwa.module.css`
+
+**Features:**
 - Server-side Auth0 authentication flow
 - Custom login/logout parameters editor (JSON textarea)
 - Session token display (access, ID, refresh tokens)
 - Direct Auth0 logout URL links (v2 and OIDC endpoints)
-```
 
 #### **4. SPA auth0-spa-js (`/spa/auth0-spa-js/`)**
-```
-Files: page.tsx
-Features:
-- Client-side authentication using @auth0/auth0-spa-js
+
+**Files**: `page.tsx`
+
+**Features:**
+- Client-side authentication using `@auth0/auth0-spa-js`
 - Login with redirect and popup flows
 - Silent token refresh functionality
 - Session state management with React hooks
-```
 
 #### **5. SPA Auth0 Lock (`/spa/lock/`)**
-```
-Files: route.ts (API route), lock.html
-Features:
-- Serves lock.html from src/app/spa/lock/ directory
+
+**Files**: `route.ts` (API route), `lock.html`
+
+**Features:**
+- Serves `lock.html` from `src/app/spa/lock/` directory
 - Route handler returns HTML with proper content-type headers
 - In-memory session storage
-```
 
 #### **6. MFA API Tester (`/mfa/`)**
-```
-Files: page.tsx, Authenticators.tsx, OTPEnrollment.tsx, PushEnrollment.tsx, MFAErrorFallback.tsx, mfa.module.css
-Features:
-- Protected route (withPageAuthRequired)
+
+**Files**: `page.tsx`, `Authenticators.tsx`, `OTPEnrollment.tsx`, `PushEnrollment.tsx`, `MFAErrorFallback.tsx`, `mfa.module.css`
+
+**Features:**
+- Protected route (`withPageAuthRequired`)
 - Error boundaries for graceful error handling and isolated component failures
 - Expandable sections for better UX organization
 - Three main components with individual error isolation:
-  1. Authenticators: List/manage enrolled authenticators with delete functionality
-  2. OTP Enrollment: Complete TOTP authenticator enrollment with QR codes
-  3. Push Enrollment: Guardian app enrollment with real-time polling
-- Structured data display using dl/dt/dd elements
+  1. **Authenticators**: List/manage enrolled authenticators with delete functionality
+  2. **OTP Enrollment**: Complete TOTP authenticator enrollment with QR codes
+  3. **Push Enrollment**: Guardian app enrollment with real-time polling
+- Structured data display using `dl`/`dt`/`dd` elements
 - Auto-refresh authenticator list after enrollment/deletion
 - MFA-specific error fallback with troubleshooting guidance
 - CSS module for component-specific styling
-```
 
 ### **API Routes**
 
@@ -132,77 +140,81 @@ Features:
 ```
 
 #### **MFA OTP Confirmation API (`/api/mfa/otp/confirm/route.ts`)**
-```
-Purpose: Secure OTP enrollment confirmation using client secret
-Method: POST
-Body: { otp: string, mfaToken: string }
-Response: { success: boolean, message: string, tokenData: object }
-Security: Client secret handled server-side, not exposed to frontend
-```
+
+- **Purpose**: Secure OTP enrollment confirmation using client secret
+- **Method**: POST
+- **Body**: `{ otp: string, mfaToken: string }`
+- **Response**: `{ success: boolean, message: string, tokenData: object }`
+- **Security**: Client secret handled server-side, not exposed to frontend
 
 #### **MFA Push Polling API (`/api/mfa/push/poll/route.ts`)**
-```
-Purpose: Poll Auth0 for push enrollment confirmation status
-Method: POST
-Body: { oobCode: string, mfaToken: string }
-Responses:
-  - Pending: { status: "pending", message: "..." }
-  - Confirmed: { status: "confirmed", tokenData: object }
-Auth0 Grant: http://auth0.com/oauth/grant-type/mfa-oob
-```
+
+- **Purpose**: Poll Auth0 for push enrollment confirmation status
+- **Method**: POST
+- **Body**: `{ oobCode: string, mfaToken: string }`
+- **Responses**:
+  - **Pending**: `{ status: "pending", message: "..." }`
+  - **Confirmed**: `{ status: "confirmed", tokenData: object }`
+- **Auth0 Grant**: `http://auth0.com/oauth/grant-type/mfa-oob`
 
 ### **Static Assets**
 
 #### **Auth0 Lock HTML (`/src/app/spa/lock/lock.html`)**
-```
-Features:
+
+**Features:**
 - Standalone HTML page with Auth0 Lock integration
-- Dynamic config fetching from /api/config
+- Dynamic config fetching from `/api/config`
 - Complete auth flow (login, logout, token display)
-- In-memory session persistence (authData object)
+- In-memory session persistence (`authData` object)
 - Error handling and loading states
 - Roboto font integration
 - 2-space indentation, double quotes, minimal semicolons
-```
 
 ## **Styling Architecture**
 
 ### **Global CSS (`/src/app/globals.css`)**
-```
-Core Design System:
+
+#### **Core Design System**
 - Roboto font family (Google Fonts)
 - 800px max-width container
 - Consistent spacing (20px outer, 30px inner padding)
 - Component-based utility classes:
-  - .btn, .btn-primary, .btn-danger, .btn-secondary
-  - .section, .user-info, .token-display
-  - .loading, .error
-  - .list-unstyled, .link-list
-  - .app-container, .app-header, .nav-list
-  - .expandable-summary (shared across components)
+  - `.btn`, `.btn-primary`, `.btn-danger`, `.btn-secondary`
+  - `.section`, `.user-info`, `.token-display`
+  - `.loading`, `.error`
+  - `.list-unstyled`, `.link-list`
+  - `.app-container`, `.app-header`, `.nav-list`
+  - `.expandable-summary` (shared across components)
 
-Text handling:
-- pre elements with proper word wrapping and overflow handling
+#### **Text Handling**
+- `pre` elements with proper word wrapping and overflow handling
 - Prevents text overflow in token displays and long URIs
 
-Error boundary styling:
-- .error-boundary (red background, bordered container)
-- .error-details (collapsible technical details)
-- .error-actions (button group for recovery actions)
+#### **Error Boundary Styling**
+- `.error-boundary` (red background, bordered container)
+- `.error-details` (collapsible technical details)
+- `.error-actions` (button group for recovery actions)
 - Consistent error styling across components
 
-Color Scheme:
-- Primary: #007bff (Bootstrap blue)
-- Danger: #dc3545 (Bootstrap red)  
-- Error Boundary: #f8d7da (Light red background)
-- Secondary: #6c757d (Bootstrap gray)
-- Background: #f5f5f5 (Light gray)
-- Text: #333 (Dark gray)
-```
+#### **Color Scheme**
+- **Primary**: `#007bff` (Bootstrap blue)
+- **Danger**: `#dc3545` (Bootstrap red)  
+- **Error Boundary**: `#f8d7da` (Light red background), text: `#721c24`
+- **Secondary**: `#6c757d` (Bootstrap gray)
+- **Background**: `#f5f5f5` (Light gray)
+- **Text**: `#333` (Dark gray)
+- **Success**: `#28a745` (success message), background: `#d4edda`
+- **Warning**: `#fff3cd` (security notice), border: `#ffeaa7`
 
 ### **Module CSS**
 - **RWA Module**: `rwa.module.css` with custom parameter editor styles
+  - `.custom-params-editor` - Parameter input styling
+  - `.custom-params-valid` / `.custom-params-invalid-or-empty` - Validation states
 - **MFA Module**: `mfa.module.css` with MFA-specific component styles
+  - `.authenticator-item` - Individual authenticator styling
+  - `.security-notice` - Warning banners
+  - `.qr-code-image` - QR code display
+  - `.otp-input` - OTP input field styling
 - **Naming Convention**: kebab-case (e.g., `custom-params-editor`, `authenticator-item`)
 - **Organization**: General styles in globals.css, component-specific in modules
 
@@ -257,8 +269,15 @@ Color Scheme:
 ├── Authenticators.tsx    # List/manage existing authenticators
 ├── OTPEnrollment.tsx     # TOTP enrollment with QR codes
 ├── PushEnrollment.tsx    # Guardian push enrollment with polling
+├── MFAErrorFallback.tsx  # MFA-specific error boundary fallback
 └── mfa.module.css        # Component-specific styling
 ```
+
+### **Security Notice Implementation**
+The MFA page includes a prominent security notice warning users that access tokens are visible in the frontend for testing purposes. This is implemented using:
+- `.security-notice` CSS class with yellow warning styling
+- Clear messaging about the testing application trade-offs
+- Positioned at the top of the MFA page for immediate visibility
 
 ### **Key Features**
 - **Expandable UI**: All sections use `<details>` elements for better organization
