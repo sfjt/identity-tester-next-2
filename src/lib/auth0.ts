@@ -21,15 +21,18 @@ export const auth0 = new Auth0Client({
 
       const sidKey = `sid:${sid}`
       const subKey = `sub:${sub}`
+      const willExpireIn = expiresAt - Math.floor(Date.now() / 1000)
 
       try {
         await redis.sadd(sidKey, id)
-        const sidExp = (await redis.scard(sidKey)) === 1 ? expiresAt : Math.max(expiresAt, await redis.ttl(sidKey))
-        await redis.expire(sidKey, sidExp)
+        const sidExpInSeconds =
+          (await redis.scard(sidKey)) === 1 ? willExpireIn : Math.max(willExpireIn, await redis.ttl(sidKey))
+        await redis.expire(sidKey, sidExpInSeconds)
 
         await redis.sadd(subKey, id)
-        const subExp = (await redis.scard(subKey)) === 1 ? expiresAt : Math.max(expiresAt, await redis.ttl(subKey))
-        await redis.expire(subKey, subExp)
+        const subExpInSeconds =
+          (await redis.scard(subKey)) === 1 ? willExpireIn : Math.max(willExpireIn, await redis.ttl(subKey))
+        await redis.expire(subKey, subExpInSeconds)
 
         await redis.set<SessionData>(id, sessionData, { exat: expiresAt })
       } catch (err) {
