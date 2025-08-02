@@ -265,7 +265,7 @@ Color Scheme:
 - **Real-time Updates**: SWR integration with `mutate()` for auto-refresh
 - **Type Safety**: Comprehensive TypeScript interfaces for all API responses
 - **Error Handling**: Proper error states and user feedback throughout
-- **Accessibility**: Semantic HTML with proper labels and ARIA attributes
+- **Accessibility**: Semantic HTML with proper labels (ARIA attributes not currently implemented)
 
 ### **OTP Enrollment Flow**
 1. POST `/mfa/associate` with `authenticator_types: ["otp"]`
@@ -283,7 +283,7 @@ Color Scheme:
 
 ### **Security Considerations**
 - Client secrets never exposed to frontend
-- MFA tokens obtained via `getAccessToken()` on each request
+- **Testing Application Trade-offs**: MFA access tokens exposed to frontend for testing convenience
 - Proper cleanup of polling intervals to prevent memory leaks
 - Error boundaries for API failures and network issues
 
@@ -369,7 +369,6 @@ UPSTASH_REDIS_REST_URL=          # 🔒 PRIVATE: Redis endpoint (better kept ser
 ### **Security Considerations**
 - All routes protected by Auth0 middleware
 - Environment-based configuration (no hardcoded secrets)
-- Proper token handling and storage
 - CSRF protection through Auth0's built-in security
 
 ---
