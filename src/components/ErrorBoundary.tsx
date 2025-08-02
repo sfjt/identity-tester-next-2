@@ -31,8 +31,8 @@ export class ErrorBoundary extends Component<Props, State> {
   render() {
     if (this.state.hasError && this.state.error) {
       const fallback = this.props.fallback
-      
-      if (typeof fallback === 'function') {
+
+      if (typeof fallback === "function") {
         return fallback(this.state.error)
       } else if (fallback) {
         return fallback

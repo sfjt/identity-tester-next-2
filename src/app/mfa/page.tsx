@@ -7,24 +7,30 @@ import OTPEnrollment from "./OTPEnrollment"
 import PushEnrollment from "./PushEnrollment"
 import MFAErrorFallback from "./MFAErrorFallback"
 
+const createMFAErrorFallback = (componentName: string) => {
+  const fallback = (error: Error) => <MFAErrorFallback error={error} componentName={componentName} />
+  fallback.displayName = `MFAErrorFallback(${componentName})`
+  return fallback
+}
+
 export default withPageAuthRequired(() => {
   return (
     <main>
       <h2>MFA API Tester</h2>
 
-      <ErrorBoundary fallback={(error) => <MFAErrorFallback error={error} componentName="Authenticators" />}>
+      <ErrorBoundary fallback={createMFAErrorFallback("Authenticators")}>
         <section className="section">
           <Authenticators />
         </section>
       </ErrorBoundary>
 
-      <ErrorBoundary fallback={(error) => <MFAErrorFallback error={error} componentName="OTP Enrollment" />}>
+      <ErrorBoundary fallback={createMFAErrorFallback("OTP Enrollment")}>
         <section className="section">
           <OTPEnrollment />
         </section>
       </ErrorBoundary>
 
-      <ErrorBoundary fallback={(error) => <MFAErrorFallback error={error} componentName="Push Enrollment" />}>
+      <ErrorBoundary fallback={createMFAErrorFallback("Push Enrollment")}>
         <section className="section">
           <PushEnrollment />
         </section>
