@@ -4,7 +4,7 @@ import { join } from "path"
 
 export async function GET() {
   try {
-    const filePath = join(process.cwd(), "public", "lock.html")
+    const filePath = join(process.cwd(), "src", "app", "spa", "lock", "lock.html")
     const htmlContent = await readFile(filePath, "utf8")
 
     return new NextResponse(htmlContent, {
