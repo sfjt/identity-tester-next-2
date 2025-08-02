@@ -64,7 +64,7 @@ function AuthenticatorItem({ authenticator, onDelete, isDeleting }: Authenticato
 }
 
 export default function Authenticators() {
-  const { data, error, isLoading, mutate } = useSWR("/mfa", getAuthenticators)
+  const { data, error, isLoading, mutate } = useSWR("/mfa/authenticators", getAuthenticators)
   const [deletingIds, setDeletingIds] = useState<Set<string>>(new Set())
 
   const handleDelete = async (authenticatorId: string) => {
@@ -87,7 +87,6 @@ export default function Authenticators() {
         throw new Error(`Failed to delete authenticator: ${response.status}`)
       }
 
-      // Refresh the authenticators list
       mutate()
     } catch (error) {
       console.error("Delete error:", error)

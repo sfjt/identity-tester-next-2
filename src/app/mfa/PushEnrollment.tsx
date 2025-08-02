@@ -201,7 +201,7 @@ export default function PushEnrollment() {
           dispatch({ type: "CONFIRMATION_SUCCESS", payload: result.tokenData })
 
           // Refresh the authenticators list
-          mutate("/mfa")
+          mutate("/mfa/authenticators")
         }
         // If status is "pending", continue polling
       } catch (error) {

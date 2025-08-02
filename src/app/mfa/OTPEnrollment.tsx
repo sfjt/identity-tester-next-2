@@ -202,7 +202,7 @@ export default function OTPEnrollment() {
       dispatch({ type: "CONFIRMATION_SUCCESS", payload: result.tokenData })
 
       // Refresh the authenticators list
-      mutate("/mfa")
+      mutate("/mfa/authenticators")
     } catch (error) {
       console.error("Confirmation error:", error)
       dispatch({
