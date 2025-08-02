@@ -17,6 +17,10 @@
 - **@auth0/auth0-spa-js v2.3.0** - Client-side SPA authentication
 - **Auth0 Lock v14.0.0** - Legacy authentication widget (CDN)
 
+### **UI & Image Processing**
+- **next/image** - Optimized image rendering
+- **qrcode v1.5.4** - QR code generation for MFA enrollment
+
 ### **Data & State Management**
 - **SWR v2.3.4** - Data fetching and caching
 - **@upstash/redis v1.35.2** - Session storage backend
@@ -97,19 +101,23 @@
 
 #### **6. MFA API Tester (`/mfa/`)**
 ```
-// Files: page.tsx, Authenticators.tsx
+// Files: page.tsx, Authenticators.tsx, OTPEnrollment.tsx, PushEnrollment.tsx, mfa.module.css
 // Features:
 - Protected route (withPageAuthRequired)
-- Auth0 Management API integration
-- MFA authenticators endpoint testing
-- HTTP status and JSON response display
+- Expandable sections for better UX organization
+- Three main components:
+  1. Authenticators: List/manage enrolled authenticators with delete functionality
+  2. OTP Enrollment: Complete TOTP authenticator enrollment with QR codes
+  3. Push Enrollment: Guardian app enrollment with real-time polling
+- Structured data display using dl/dt/dd elements
+- Auto-refresh authenticator list after enrollment/deletion
+- CSS module for component-specific styling
 ```
 
 ### **API Routes**
 
 #### **Configuration API (`/api/config/route.ts`)**
 ```javascript
-// Returns:
 {
   auth0_domain: process.env.AUTH0_DOMAIN,
   app_base_url: process.env.APP_BASE_URL,
@@ -118,11 +126,31 @@
 }
 ```
 
+#### **MFA OTP Confirmation API (`/api/mfa/otp/confirm/route.ts`)**
+```
+Purpose: Secure OTP enrollment confirmation using client secret
+Method: POST
+Body: { otp: string, mfaToken: string }
+Response: { success: boolean, message: string, tokenData: object }
+Security: Client secret handled server-side, not exposed to frontend
+```
+
+#### **MFA Push Polling API (`/api/mfa/push/poll/route.ts`)**
+```
+Purpose: Poll Auth0 for push enrollment confirmation status
+Method: POST
+Body: { oobCode: string, mfaToken: string }
+Responses:
+  - Pending: { status: "pending", message: "..." }
+  - Confirmed: { status: "confirmed", tokenData: object }
+Auth0 Grant: http://auth0.com/oauth/grant-type/mfa-oob
+```
+
 ### **Static Assets**
 
 #### **Auth0 Lock HTML (`/public/lock.html`)**
 ```
-// Features:
+Features:
 - Standalone HTML page with Auth0 Lock integration
 - Dynamic config fetching from /api/config
 - Complete auth flow (login, logout, token display)
@@ -135,7 +163,7 @@
 
 ### **Global CSS (`/src/app/globals.css`)**
 ```
-/* Core Design System */
+Core Design System:
 - Roboto font family (Google Fonts)
 - 800px max-width container
 - Consistent spacing (20px outer, 30px inner padding)
@@ -145,10 +173,15 @@
   - .loading, .error
   - .list-unstyled, .link-list
   - .app-container, .app-header, .nav-list
+  - .expandable-summary (shared across components)
 
-/* Color Scheme */
+Text handling:
+- pre elements with proper word wrapping and overflow handling
+- Prevents text overflow in token displays and long URIs
+
+Color Scheme:
 - Primary: #007bff (Bootstrap blue)
-- Danger: #dc3545 (Bootstrap red)
+- Danger: #dc3545 (Bootstrap red)  
 - Secondary: #6c757d (Bootstrap gray)
 - Background: #f5f5f5 (Light gray)
 - Text: #333 (Dark gray)
@@ -156,12 +189,16 @@
 
 ### **Module CSS**
 - **RWA Module**: `rwa.module.css` with custom parameter editor styles
-- **Naming Convention**: kebab-case (e.g., `custom-params-editor`)
+- **MFA Module**: `mfa.module.css` with MFA-specific component styles
+- **Naming Convention**: kebab-case (e.g., `custom-params-editor`, `authenticator-item`)
+- **Organization**: General styles in globals.css, component-specific in modules
 
 ### **Design Consistency**
 - All pages use same container, button, and token display styling
 - Unified navigation header across React components
 - Professional card-based layout with shadows and rounded corners
+- Expandable sections with consistent summary styling
+- Optimized spacing and alignment across components
 
 ## **Authentication Flows**
 
@@ -184,9 +221,58 @@
 - Session persistence in localStorage
 
 ### **4. MFA API Testing**
-- Auth0 Management API integration
-- Requires specific MFA scopes
-- Tests authenticator enrollment/management endpoints
+- **Authenticator Management**: List, view, and delete enrolled authenticators
+- **OTP Enrollment**: Complete TOTP authenticator enrollment flow
+  - QR code generation using qrcode library
+  - Real-time enrollment confirmation via secure API
+  - Recovery codes display and management
+  - Auto-refresh authenticator list on success
+- **Push Enrollment**: Guardian app enrollment with real-time status polling
+  - QR code generation for Guardian app scanning
+  - Secure server-side polling using client secret
+  - 5-minute enrollment window with timeout handling
+  - Automatic OTP fallback capability
+- **State Management**: useReducer pattern for complex state handling
+- **Security**: Client secrets protected on backend, MFA tokens handled securely
+
+## **MFA Implementation Details**
+
+### **Component Architecture**
+```
+/mfa/
+├── page.tsx              # Main MFA route with three expandable sections
+├── Authenticators.tsx    # List/manage existing authenticators
+├── OTPEnrollment.tsx     # TOTP enrollment with QR codes
+├── PushEnrollment.tsx    # Guardian push enrollment with polling
+└── mfa.module.css        # Component-specific styling
+```
+
+### **Key Features**
+- **Expandable UI**: All sections use `<details>` elements for better organization
+- **Real-time Updates**: SWR integration with `mutate()` for auto-refresh
+- **Type Safety**: Comprehensive TypeScript interfaces for all API responses
+- **Error Handling**: Proper error states and user feedback throughout
+- **Accessibility**: Semantic HTML with proper labels and ARIA attributes
+
+### **OTP Enrollment Flow**
+1. POST `/mfa/associate` with `authenticator_types: ["otp"]`
+2. Generate QR code from `barcode_uri` using qrcode library
+3. User enters verification code from authenticator app
+4. POST `/api/mfa/otp/confirm` with OTP and MFA token
+5. Display success with full token response
+
+### **Push Enrollment Flow**
+1. POST `/mfa/associate` with `authenticator_types: ["oob"], oob_channels: ["auth0"]`
+2. Generate QR code from `barcode_uri` for Guardian app
+3. Start polling `/api/mfa/push/poll` with `oob_code` every 3 seconds
+4. Handle `authorization_pending` vs confirmed responses
+5. Auto-timeout after 5 minutes, cleanup intervals properly
+
+### **Security Considerations**
+- Client secrets never exposed to frontend
+- MFA tokens obtained via `getAccessToken()` on each request
+- Proper cleanup of polling intervals to prevent memory leaks
+- Error boundaries for API failures and network issues
 
 ## **Environment Configuration**
 
