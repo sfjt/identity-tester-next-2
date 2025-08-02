@@ -3,11 +3,13 @@
 import { withPageAuthRequired } from "@auth0/nextjs-auth0"
 import Authenticators from "./Authenticators"
 
-export default withPageAuthRequired(function RWAPage() {
+export default withPageAuthRequired(function MFAPage() {
   return (
     <main>
       <h2>MFA API Tester</h2>
-      <Authenticators />
+      <section className="section">
+        <Authenticators />
+      </section>
     </main>
   )
 })

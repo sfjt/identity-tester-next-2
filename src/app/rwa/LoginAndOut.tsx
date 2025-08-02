@@ -16,11 +16,11 @@ export default function LoginAndOut() {
 
   if (error) {
     console.error(error)
-    return <p>Something went wrong.</p>
+    return <p className="error">Something went wrong.</p>
   }
 
   if (isLoading || !data) {
-    return <p>Loading...</p>
+    return <p className="loading">Loading...</p>
   }
 
   const v2LogoutURL = `https://${data.auth0_domain}/v2/logout`
@@ -76,28 +76,24 @@ export default function LoginAndOut() {
 
   return (
     <div>
-      <ul>
+      <ul className="list-unstyled">
         <li>
-          <button onClick={login}>Login</button>
+          <button className="btn btn-primary" onClick={login}>
+            Login
+          </button>
         </li>
         <li>
-          <button onClick={logout}>Logout</button>
+          <button className="btn btn-danger" onClick={logout}>
+            Logout
+          </button>
         </li>
         <li>
           <div>
-            <label onClick={toggleEditorVisibility} htmlFor="custom-params" className={styles["custom-params-label"]}>
-              <button>{state.editorVisible ? "-" : "+"} Custom login/logout params</button>
-            </label>
-            <div className={state.editorVisible ? "" : styles["custom-params-hidden"]}>
-              <p>
-                <textarea
-                  onChange={parseParams}
-                  rows={10}
-                  cols={50}
-                  id="custom-params"
-                  defaultValue={`{\n  \n}`}
-                ></textarea>
-              </p>
+            <button className="btn btn-secondary" onClick={toggleEditorVisibility}>
+              {state.editorVisible ? "-" : "+"} Custom login/logout params
+            </button>
+            <div className={state.editorVisible ? styles["custom-params-editor"] : styles["custom-params-hidden"]}>
+              <textarea onChange={parseParams} rows={10} cols={50} id="custom-params" defaultValue={`{\n  \n}`} />
               {state.params.size > 0 ? (
                 <p className={styles["custom-params-valid"]}>{state.params.toString()}</p>
               ) : (
@@ -107,7 +103,7 @@ export default function LoginAndOut() {
           </div>
         </li>
       </ul>
-      <ul>
+      <ul className="link-list">
         <li>
           <a href={v2LogoutURL}>{v2LogoutURL}</a>
         </li>

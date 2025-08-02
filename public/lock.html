@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Single Page Application: auth0-lock</title>
+  <script src="https://cdn.auth0.com/js/lock/14.0.0/lock.min.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .login-section {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .login-btn {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      margin: 10px;
+    }
+    .login-btn:hover {
+      background-color: #0056b3;
+    }
+    .logout-btn {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .logout-btn:hover {
+      background-color: #c82333;
+    }
+    .user-info {
+      display: none;
+      background-color: #f8f9fa;
+      padding: 20px;
+      border-radius: 4px;
+      margin-top: 20px;
+    }
+    .token-display {
+      background-color: #e9ecef;
+      padding: 15px;
+      border-radius: 4px;
+      margin: 10px 0;
+      word-break: break-all;
+      font-family: monospace;
+      font-size: 12px;
+    }
+    .loading {
+      text-align: center;
+      color: #666;
+    }
+    .error {
+      color: #dc3545;
+      background-color: #f8d7da;
+      padding: 10px;
+      border-radius: 4px;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Single Page Application: auth0-lock</h1>
+    
+    <div class="login-section" id="loginSection">
+      <p>Click the button below to login using Auth0 Lock:</p>
+      <button id="loginBtn" class="login-btn">Login with Auth0 Lock</button>
+      <div id="loading" class="loading" style="display: none;">Loading Auth0 configuration...</div>
+      <div id="error" class="error" style="display: none;"></div>
+    </div>
+
+    <div id="userInfo" class="user-info">
+      <h3>Welcome, <span id="userName"></span>!</h3>
+      <button id="logoutBtn" class="logout-btn">Logout</button>
+      
+      <h4>User Profile:</h4>
+      <div id="userProfile" class="token-display"></div>
+      
+      <h4>Access Token:</h4>
+      <div id="accessToken" class="token-display"></div>
+      
+      <h4>ID Token:</h4>
+      <div id="idToken" class="token-display"></div>
+    </div>
+  </div>
+
+  <script>
+    let lock
+    let authConfig
+
+    function showError(message) {
+      document.getElementById("error").textContent = message
+      document.getElementById("error").style.display = "block"
+    }
+
+    function hideError() {
+      document.getElementById("error").style.display = "none"
+    }
+
+    function showLoading() {
+      document.getElementById("loading").style.display = "block"
+      document.getElementById("loginBtn").disabled = true
+    }
+
+    function hideLoading() {
+      document.getElementById("loading").style.display = "none"
+      document.getElementById("loginBtn").disabled = false
+    }
+
+    function showUserInfo(profile, accessToken, idToken) {
+      document.getElementById("loginSection").style.display = "none"
+      document.getElementById("userInfo").style.display = "block"
+      
+      document.getElementById("userName").textContent = profile.name || profile.email || "User"
+      document.getElementById("userProfile").textContent = JSON.stringify(profile, null, 2)
+      document.getElementById("accessToken").textContent = accessToken || "N/A"
+      document.getElementById("idToken").textContent = idToken || "N/A"
+    }
+
+    function showLoginSection() {
+      document.getElementById("loginSection").style.display = "block"
+      document.getElementById("userInfo").style.display = "none"
+    }
+
+    async function fetchAuthConfig() {
+      try {
+        showLoading()
+        hideError()
+        
+        const response = await fetch("/api/config")
+        if (!response.ok) {
+          throw new Error("Failed to fetch configuration")
+        }
+        
+        authConfig = await response.json()
+        
+        if (!authConfig.auth0_domain || !authConfig.spa_client_id) {
+          throw new Error("Missing Auth0 configuration")
+        }
+
+        initializeLock()
+        hideLoading()
+        
+      } catch (error) {
+        console.error("Error fetching auth config:", error)
+        showError("Failed to load Auth0 configuration: " + error.message)
+        hideLoading()
+      }
+    }
+
+    function initializeLock() {
+      lock = new Auth0Lock(authConfig.spa_client_id, authConfig.auth0_domain, {
+        auth: {
+          redirectUrl: window.location.origin + "/spa/lock",
+          responseType: "token id_token",
+          audience: authConfig.default_audience,
+          params: {
+            scope: "openid profile email"
+          }
+        },
+        theme: {
+          primaryColor: "#007bff"
+        },
+        languageDictionary: {
+          title: "Login to Identity Tester"
+        },
+        closable: true,
+        rememberLastLogin: true
+      })
+
+      lock.on("authenticated", function(authResult) {
+        console.log("Authentication successful:", authResult)
+        
+        lock.getUserInfo(authResult.accessToken, function(error, profile) {
+          if (error) {
+            console.error("Error getting user info:", error)
+            showError("Error getting user information: " + error.message)
+            return
+          }
+          
+          console.log("User profile:", profile)
+          showUserInfo(profile, authResult.accessToken, authResult.idToken)
+          
+          localStorage.setItem("access_token", authResult.accessToken)
+          localStorage.setItem("id_token", authResult.idToken)
+          localStorage.setItem("user_profile", JSON.stringify(profile))
+        })
+      })
+
+      lock.on("authorization_error", function(error) {
+        console.error("Authorization error:", error)
+        showError("Authorization failed: " + error.error_description)
+      })
+
+      lock.on("unrecoverable_error", function(error) {
+        console.error("Unrecoverable error:", error)
+        showError("Login error: " + error.error_description)
+      })
+
+      checkExistingAuth()
+    }
+
+    function checkExistingAuth() {
+      const accessToken = localStorage.getItem("access_token")
+      const userProfile = localStorage.getItem("user_profile")
+      const idToken = localStorage.getItem("id_token")
+      
+      if (accessToken && userProfile) {
+        try {
+          const profile = JSON.parse(userProfile)
+          showUserInfo(profile, accessToken, idToken)
+        } catch (error) {
+          console.error("Error parsing stored user profile:", error)
+          clearStoredAuth()
+        }
+      }
+    }
+
+    function clearStoredAuth() {
+      localStorage.removeItem("access_token")
+      localStorage.removeItem("id_token")
+      localStorage.removeItem("user_profile")
+    }
+
+    function logout() {
+      clearStoredAuth()
+      showLoginSection()
+      
+      if (lock) {
+        lock.logout({
+          returnTo: window.location.origin + "/spa/lock"
+        })
+      }
+    }
+
+    document.getElementById("loginBtn").addEventListener("click", function() {
+      if (lock) {
+        lock.show()
+      } else {
+        showError("Auth0 Lock is not initialized yet. Please wait...")
+      }
+    })
+
+    document.getElementById("logoutBtn").addEventListener("click", logout)
+
+    window.addEventListener("load", function() {
+      fetchAuthConfig()
+    })
+  </script>
+</body>
+</html>

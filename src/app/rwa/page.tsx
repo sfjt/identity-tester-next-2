@@ -7,20 +7,22 @@ export default async function RWAPage() {
   return (
     <main>
       <h2>Regular Web Application</h2>
-      <section>
+      <section className="section">
         <h3>Login and Logout</h3>
         <LoginAndOut />
       </section>
-      <section>
+      <section className="section">
         <h3>Session Details</h3>
-        <dl>
-          <dt>Access Token:</dt>
-          <dd>{session?.tokenSet.accessToken || "N/A"}</dd>
-          <dt>ID Token:</dt>
-          <dd>{session?.tokenSet.idToken || "N/A"}</dd>
-          <dt>Refresh Token:</dt>
-          <dd>{session?.tokenSet.refreshToken || "N/A"}</dd>
-        </dl>
+        <div className="user-info">
+          <dl>
+            <dt>Access Token:</dt>
+            <dd>{session?.tokenSet.accessToken || "N/A"}</dd>
+            <dt>ID Token:</dt>
+            <dd>{session?.tokenSet.idToken || "N/A"}</dd>
+            <dt>Refresh Token:</dt>
+            <dd>{session?.tokenSet.refreshToken || "N/A"}</dd>
+          </dl>
+        </div>
       </section>
     </main>
   )

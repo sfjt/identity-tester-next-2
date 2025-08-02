@@ -16,21 +16,28 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <header>
-          <h1>Identity Tester Next</h1>
-          <ul>
-            <li>
-              <a href="/rwa">Regular Web Application</a>
-            </li>
-            <li>
-              <a href="/spa/auth0-spa-js">Single Page Application (auth0-spa-js)</a>
-            </li>
-            <li>
-              <LoginToMFATester />
-            </li>
-          </ul>
-        </header>
-        {children}
+        <div className="app-container">
+          <header className="app-header">
+            <h1>Identity Tester Next</h1>
+            <nav>
+              <ul className="nav-list">
+                <li>
+                  <a href="/rwa">Regular Web Application</a>
+                </li>
+                <li>
+                  <a href="/spa/auth0-spa-js">Single Page Application (auth0-spa-js)</a>
+                </li>
+                <li>
+                  <a href="/spa/lock">Single Page Application (auth0-lock)</a>
+                </li>
+                <li>
+                  <LoginToMFATester />
+                </li>
+              </ul>
+            </nav>
+          </header>
+          {children}
+        </div>
       </body>
     </html>
   )

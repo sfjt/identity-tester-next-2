@@ -74,14 +74,14 @@ export default function Page() {
     console.error(error)
     return (
       <main>
-        <p>Something went wrong.</p>
+        <p className="error">Something went wrong.</p>
       </main>
     )
   }
   if (isLoading || !data) {
     return (
       <main>
-        <p>Loading...</p>
+        <p className="loading">Loading...</p>
       </main>
     )
   }
@@ -138,32 +138,42 @@ export default function Page() {
   return (
     <main>
       <h2>Single Page Application: auth0-spa-js</h2>
-      <section>
+      <section className="section">
         <h3>Login and Logout</h3>
-        <ul>
+        <ul className="list-unstyled">
           <li>
-            <button onClick={login}>Login with redirect</button>
+            <button className="btn btn-primary" onClick={login}>
+              Login with redirect
+            </button>
           </li>
           <li>
-            <button onClick={loginWithPopup}>Login with popup</button>
+            <button className="btn btn-primary" onClick={loginWithPopup}>
+              Login with popup
+            </button>
           </li>
           <li>
-            <button onClick={getAndDisplaySessionInfo}>Get token silently</button>
+            <button className="btn btn-secondary" onClick={getAndDisplaySessionInfo}>
+              Get token silently
+            </button>
           </li>
           <li>
-            <button onClick={logout}>Logout</button>
+            <button className="btn btn-danger" onClick={logout}>
+              Logout
+            </button>
           </li>
         </ul>
       </section>
-      <section>
+      <section className="section">
         <h3>Session Details</h3>
-        <dl>
-          <dt>Access Token:</dt>
-          <dd>{(state.accessToken ? state.accessToken : data.accessToken) || "N/A"}</dd>
+        <div className="user-info">
+          <dl>
+            <dt>Access Token:</dt>
+            <dd>{(state.accessToken ? state.accessToken : data.accessToken) || "N/A"}</dd>
 
-          <dt>ID Token:</dt>
-          <dd>{(state.idToken ? state.idToken.__raw : data.idToken?.__raw) || "N/A"}</dd>
-        </dl>
+            <dt>ID Token:</dt>
+            <dd>{(state.idToken ? state.idToken.__raw : data.idToken?.__raw) || "N/A"}</dd>
+          </dl>
+        </div>
       </section>
     </main>
   )
