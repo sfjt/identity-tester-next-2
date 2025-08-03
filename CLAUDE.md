@@ -358,15 +358,24 @@ UPSTASH_REDIS_REST_URL=          # 🔒 PRIVATE: Redis endpoint (better kept ser
 - Custom `fetchConfig` utility for API config
 
 ### **Session Management**
-- Redis-based session storage using Redis Sets for inverted indexes
-- Session tracking by both `sid` (session ID) and `sub` (subject/user ID) via `SADD`
-- Intelligent TTL management: uses `SCARD` to detect new indexes, extends existing ones to longest session lifetime
-- Proper timestamp handling: converts absolute expiration to relative seconds for Redis TTL
-- OIDC Back-channel logout with proper cleanup using `SREM` to maintain data consistency
-- **Enhanced Error Handling**: Uses `Promise.allSettled` for concurrent operations with detailed error logging
-- **Parallel Operations**: Inverse index operations (sid/sub sets) execute concurrently for better performance
-- **Context-Aware Logging**: Error messages include session IDs and operation context for easier debugging
-- **Robust Error Propagation**: Proper error aggregation and re-throwing for upstream handling
+- **Redis Session Store Architecture**: Custom implementation with optimized session management
+  - Uses Redis Sets (`SADD`/`SMEMBERS`) for inverted indexes tracking sessions by `sid` and `sub`
+  - Sequential session creation for simplicity and reliability
+  - Supports OIDC Back-channel logout via inverted index lookups
+  - Uses Upstash Redis for persistence
+- **Refactored Implementation**: Modular design with helper functions for maintainability
+  - `upsertInverseIndex()`: Handles Redis pipeline operations for session index management
+  - `deleteSessionsBatch()`: Batches session deletion operations for performance
+  - `handleRedisError()`: Unified error handling with structured logging context
+  - `executeTasksWithErrorAggregation()`: Promise.allSettled wrapper with error aggregation
+- **Performance Optimizations**: 
+  - Redis pipeline operations reduce round trips and ensure atomicity
+  - Concurrent operations for sid/sub index management
+  - Intelligent TTL management: uses `SCARD` to detect new indexes, extends existing ones to longest session lifetime
+- **Enhanced Error Handling**: 
+  - Preserves original error stack traces with proper error type checking
+  - Context-aware logging with operation details and session information
+  - Robust error propagation and aggregation for upstream handling
 
 ### **Component Architecture**
 - Server components for protected routes (`withPageAuthRequired`)
@@ -419,24 +428,6 @@ npm run switchenv <file> # Switch environment files
 - Redis session store provides persistent sessions across server restarts
 - Global CSS classes ensure consistent styling across all auth flows
 
-### **CLAUDE.md Maintenance Guidelines**
-
-**Always update CLAUDE.md when:**
-- **Architecture Changes**: Component structure, error boundaries, or data flow patterns are modified
-- **New Features**: Adding new authentication flows, API routes, or major components
-- **Environment Variables**: Adding, removing, or changing required environment configuration
-- **Development Workflow**: Changes to build scripts, linting rules, or development commands
-- **Security Updates**: New security considerations, authentication patterns, or secret handling
-- **Styling Patterns**: Updates to CSS architecture, design system, or component styling conventions
-- **Dependency Changes**: Major framework updates, new libraries, or changed development tools
-- **File Structure**: Moving files, changing routing patterns, or reorganizing the codebase
-
 **Documentation should reflect the current state** - keep technical details accurate and comprehensive for effective development and maintenance.
-
-**Post-Commit Workflow:**
-- **Always review CLAUDE.md after creating commits** - ensure changes are properly documented
-- **Update documentation immediately** if changes aren't reflected in CLAUDE.md
-- **Include documentation updates in follow-up commits** when necessary
-- This ensures the technical memo stays synchronized with the actual codebase state
 
 This repository represents a comprehensive Auth0 testing platform with modern Next.js architecture, multiple authentication patterns, and consistent design system implementation.

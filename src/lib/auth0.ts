@@ -4,6 +4,54 @@ import { SessionData } from "@auth0/nextjs-auth0/types"
 
 const redis = Redis.fromEnv()
 
+async function upsertInverseIndex(
+  key: string, 
+  sessionId: string, 
+  willExpireIn: number
+): Promise<void> {
+  const pipeline = redis.pipeline()
+  pipeline.sadd(key, sessionId)
+  pipeline.scard(key)
+  pipeline.ttl(key)
+  
+  const [, cardResult, ttlResult] = await pipeline.exec<[number, number, number]>()
+  const expInSeconds = cardResult === 1 ? willExpireIn : Math.max(willExpireIn, ttlResult)
+  await redis.expire(key, expInSeconds)
+}
+
+async function deleteSessionsBatch(
+  sessionIds: string[], 
+  indexKey: string
+): Promise<void> {
+  if (sessionIds.length === 0) return
+  
+  const pipeline = redis.pipeline()
+  sessionIds.forEach(id => {
+    pipeline.del(id)
+    pipeline.srem(indexKey, id)
+  })
+  await pipeline.exec()
+}
+
+function handleRedisError(operation: string, context: Record<string, string>) {
+  return (err: unknown) => {
+    console.error('Redis operation failed\n', {
+      operation,
+      ...context,
+      error: err instanceof Error ? err.message : String(err)
+    })
+    throw err instanceof Error ? err : new Error(String(err))
+  }
+}
+
+async function executeTasksWithErrorAggregation(tasks: Promise<void>[]): Promise<void> {
+  const results = await Promise.allSettled(tasks)
+  const failed = results.filter((result) => result.status === "rejected")
+  if (failed.length) {
+    throw new Error(failed.map((f) => f.reason?.message || f.reason).join("\n"))
+  }
+}
+
 export const auth0 = new Auth0Client({
   sessionStore: {
     async get(id) {
@@ -13,87 +61,41 @@ export const auth0 = new Auth0Client({
       const { expiresAt } = sessionData.tokenSet
       const { sid } = sessionData.internal
       const { sub } = sessionData.user
-
-      const sidKey = `sid:${sid}`
-      const subKey = `sub:${sub}`
       const willExpireIn = expiresAt - Math.floor(Date.now() / 1000)
 
-      const tasks: Promise<void>[] = []
-      tasks.push(
-        (async () => {
-          await redis.sadd(sidKey, id)
-          const sidExpInSeconds =
-            (await redis.scard(sidKey)) === 1 ? willExpireIn : Math.max(willExpireIn, await redis.ttl(sidKey))
-          await redis.expire(sidKey, sidExpInSeconds)
-        })().catch((err) => {
-          console.error(`Failed to set inverse index for sid: ${sid} -> ${id}\n`, err)
-          throw new Error(err)
-        }),
-      )
+      const tasks = [
+        upsertInverseIndex(`sid:${sid}`, id, willExpireIn)
+          .catch(handleRedisError('set_sid_index', { sid, sessionId: id })),
+        upsertInverseIndex(`sub:${sub}`, id, willExpireIn)
+          .catch(handleRedisError('set_sub_index', { sub, sessionId: id }))
+      ]
 
-      tasks.push(
-        (async () => {
-          await redis.sadd(subKey, id)
-          const subExpInSeconds =
-            (await redis.scard(subKey)) === 1 ? willExpireIn : Math.max(willExpireIn, await redis.ttl(subKey))
-          await redis.expire(subKey, subExpInSeconds)
-        })().catch((err) => {
-          console.error(`Failed to set inverse index for sub: ${sub} -> ${id}\n`, err)
-          throw new Error(err)
-        }),
-      )
-
-      const results = await Promise.allSettled(tasks)
-      const failed = results.filter((result) => result.status === "rejected")
-      if (failed.length) {
-        throw new Error(failed.map((f) => f.reason).join("\n"))
-      }
-
+      await executeTasksWithErrorAggregation(tasks)
       await redis.set<SessionData>(id, sessionData, { exat: expiresAt })
     },
     async delete(id) {
       await redis.del(id)
     },
     async deleteByLogoutToken({ sid, sub }) {
-      const tasks: Array<Promise<void>> = []
+      const tasks: Promise<void>[] = []
 
       if (sid) {
-        const sidKey = `sid:${sid}`
-        const sessionIds = await redis.smembers(sidKey)
-        sessionIds.forEach((id) => {
-          tasks.push(
-            (async () => {
-              await redis.del(id)
-              await redis.srem(sidKey, id)
-            })().catch((err) => {
-              console.error(`Failed to delete session by sid: ${sid} -> ${id}\n`, err)
-              throw new Error(err)
-            }),
-          )
-        })
+        const sessionIds = await redis.smembers(`sid:${sid}`)
+        tasks.push(
+          deleteSessionsBatch(sessionIds, `sid:${sid}`)
+            .catch(handleRedisError('delete_sessions_by_sid', { sid }))
+        )
       }
 
       if (sub) {
-        const subKey = `sub:${sub}`
-        const sessionIds = await redis.smembers(subKey)
-        sessionIds.forEach((id) => {
-          tasks.push(
-            (async () => {
-              await redis.del(id)
-              await redis.srem(subKey, id)
-            })().catch((err) => {
-              console.error(`Failed to delete session by sub: ${sub} -> ${id}\n`, err)
-              throw new Error(err)
-            }),
-          )
-        })
+        const sessionIds = await redis.smembers(`sub:${sub}`)
+        tasks.push(
+          deleteSessionsBatch(sessionIds, `sub:${sub}`)
+            .catch(handleRedisError('delete_sessions_by_sub', { sub }))
+        )
       }
 
-      const results = await Promise.allSettled(tasks)
-      const failed = results.filter((result) => result.status === "rejected")
-      if (failed.length) {
-        throw new Error(failed.map((f) => f.reason).join("\n"))
-      }
+      await executeTasksWithErrorAggregation(tasks)
     },
   },
 })
