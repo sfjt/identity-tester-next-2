@@ -7,12 +7,7 @@ const redis = Redis.fromEnv()
 export const auth0 = new Auth0Client({
   sessionStore: {
     async get(id) {
-      try {
-        return await redis.get<SessionData>(id)
-      } catch (err) {
-        console.error(err)
-        return null
-      }
+      return await redis.get<SessionData>(id)
     },
     async set(id, sessionData) {
       const { expiresAt } = sessionData.tokenSet
@@ -23,28 +18,41 @@ export const auth0 = new Auth0Client({
       const subKey = `sub:${sub}`
       const willExpireIn = expiresAt - Math.floor(Date.now() / 1000)
 
-      try {
-        await redis.sadd(sidKey, id)
-        const sidExpInSeconds =
-          (await redis.scard(sidKey)) === 1 ? willExpireIn : Math.max(willExpireIn, await redis.ttl(sidKey))
-        await redis.expire(sidKey, sidExpInSeconds)
+      const tasks: Promise<void>[] = []
+      tasks.push(
+        (async () => {
+          await redis.sadd(sidKey, id)
+          const sidExpInSeconds =
+            (await redis.scard(sidKey)) === 1 ? willExpireIn : Math.max(willExpireIn, await redis.ttl(sidKey))
+          await redis.expire(sidKey, sidExpInSeconds)
+        })().catch((err) => {
+          console.error(`Failed to set inverse index for sid: ${sid} -> ${id}\n`, err)
+          throw new Error(err)
+        }),
+      )
 
-        await redis.sadd(subKey, id)
-        const subExpInSeconds =
-          (await redis.scard(subKey)) === 1 ? willExpireIn : Math.max(willExpireIn, await redis.ttl(subKey))
-        await redis.expire(subKey, subExpInSeconds)
+      tasks.push(
+        (async () => {
+          await redis.sadd(subKey, id)
+          const subExpInSeconds =
+            (await redis.scard(subKey)) === 1 ? willExpireIn : Math.max(willExpireIn, await redis.ttl(subKey))
+          await redis.expire(subKey, subExpInSeconds)
+        })().catch((err) => {
+          console.error(`Failed to set inverse index for sub: ${sub} -> ${id}\n`, err)
+          throw err
+        }),
+      )
 
-        await redis.set<SessionData>(id, sessionData, { exat: expiresAt })
-      } catch (err) {
-        console.error(err)
+      const results = await Promise.allSettled(tasks)
+      const failed = results.filter((result) => result.status === "rejected")
+      if (failed.length) {
+        throw new Error(failed.map((f) => f.reason).join("\n"))
       }
+
+      await redis.set<SessionData>(id, sessionData, { exat: expiresAt })
     },
     async delete(id) {
-      try {
-        await redis.del(id)
-      } catch (err) {
-        console.error(err)
-      }
+      await redis.del(id)
     },
     async deleteByLogoutToken({ sid, sub }) {
       const tasks: Array<Promise<void>> = []
@@ -57,7 +65,10 @@ export const auth0 = new Auth0Client({
             (async () => {
               await redis.del(id)
               await redis.srem(sidKey, id)
-            })(),
+            })().catch((err) => {
+              console.error(`Failed to delete session by sid: ${sid} -> ${id}\n`, err)
+              throw new Error(err)
+            }),
           )
         })
       }
@@ -70,17 +81,19 @@ export const auth0 = new Auth0Client({
             (async () => {
               await redis.del(id)
               await redis.srem(subKey, id)
-            })(),
+            })().catch((err) => {
+              console.error(`Failed to delete session by sub: ${sub} -> ${id}\n`, err)
+              throw new Error(err)
+            }),
           )
         })
       }
 
       const results = await Promise.allSettled(tasks)
-      results
-        .filter((result) => result.status === "rejected")
-        .forEach((result) => {
-          console.error(`${result.status}: ${result.reason}`)
-        })
+      const failed = results.filter((result) => result.status === "rejected")
+      if (failed.length) {
+        new Error(failed.map((f) => f.reason).join("\n"))
+      }
     },
   },
 })

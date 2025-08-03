@@ -18,11 +18,12 @@ export default withPageAuthRequired(() => {
   return (
     <main>
       <h2>MFA API Tester</h2>
-      
+
       <div className={`section ${styles["security-notice"]}`}>
         <h3>⚠️ Security Notice</h3>
         <p>
-          <strong>Testing Application:</strong> This app exposes the MFA API access token to the frontend for testing convenience.
+          <strong>Testing Application:</strong> This app exposes the MFA API access token to the frontend for testing
+          convenience.
         </p>
       </div>
 
