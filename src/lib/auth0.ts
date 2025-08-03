@@ -39,7 +39,7 @@ export const auth0 = new Auth0Client({
           await redis.expire(subKey, subExpInSeconds)
         })().catch((err) => {
           console.error(`Failed to set inverse index for sub: ${sub} -> ${id}\n`, err)
-          throw err
+          throw new Error(err)
         }),
       )
 
@@ -92,7 +92,7 @@ export const auth0 = new Auth0Client({
       const results = await Promise.allSettled(tasks)
       const failed = results.filter((result) => result.status === "rejected")
       if (failed.length) {
-        new Error(failed.map((f) => f.reason).join("\n"))
+        throw new Error(failed.map((f) => f.reason).join("\n"))
       }
     },
   },
