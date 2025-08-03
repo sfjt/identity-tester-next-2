@@ -363,7 +363,10 @@ UPSTASH_REDIS_REST_URL=          # 🔒 PRIVATE: Redis endpoint (better kept ser
 - Intelligent TTL management: uses `SCARD` to detect new indexes, extends existing ones to longest session lifetime
 - Proper timestamp handling: converts absolute expiration to relative seconds for Redis TTL
 - OIDC Back-channel logout with proper cleanup using `SREM` to maintain data consistency
-- Sequential implementation prioritizing data integrity and reliability
+- **Enhanced Error Handling**: Uses `Promise.allSettled` for concurrent operations with detailed error logging
+- **Parallel Operations**: Inverse index operations (sid/sub sets) execute concurrently for better performance
+- **Context-Aware Logging**: Error messages include session IDs and operation context for easier debugging
+- **Robust Error Propagation**: Proper error aggregation and re-throwing for upstream handling
 
 ### **Component Architecture**
 - Server components for protected routes (`withPageAuthRequired`)
