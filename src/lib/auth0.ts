@@ -4,29 +4,22 @@ import { SessionData } from "@auth0/nextjs-auth0/types"
 
 const redis = Redis.fromEnv()
 
-async function upsertInverseIndex(
-  key: string, 
-  sessionId: string, 
-  willExpireIn: number
-): Promise<void> {
+async function upsertInverseIndex(key: string, sessionId: string, willExpireIn: number): Promise<void> {
   const pipeline = redis.pipeline()
   pipeline.sadd(key, sessionId)
   pipeline.scard(key)
   pipeline.ttl(key)
-  
+
   const [, cardResult, ttlResult] = await pipeline.exec<[number, number, number]>()
   const expInSeconds = cardResult === 1 ? willExpireIn : Math.max(willExpireIn, ttlResult)
   await redis.expire(key, expInSeconds)
 }
 
-async function deleteSessionsBatch(
-  sessionIds: string[], 
-  indexKey: string
-): Promise<void> {
+async function deleteSessionsBatch(sessionIds: string[], indexKey: string): Promise<void> {
   if (sessionIds.length === 0) return
-  
+
   const pipeline = redis.pipeline()
-  sessionIds.forEach(id => {
+  sessionIds.forEach((id) => {
     pipeline.del(id)
     pipeline.srem(indexKey, id)
   })
@@ -35,10 +28,10 @@ async function deleteSessionsBatch(
 
 function handleRedisError(operation: string, context: Record<string, string>) {
   return (err: unknown) => {
-    console.error('Redis operation failed\n', {
+    console.error("Redis operation failed\n", {
       operation,
       ...context,
-      error: err instanceof Error ? err.message : String(err)
+      error: err instanceof Error ? err.message : String(err),
     })
     throw err instanceof Error ? err : new Error(String(err))
   }
@@ -64,10 +57,12 @@ export const auth0 = new Auth0Client({
       const willExpireIn = expiresAt - Math.floor(Date.now() / 1000)
 
       const tasks = [
-        upsertInverseIndex(`sid:${sid}`, id, willExpireIn)
-          .catch(handleRedisError('set_sid_index', { sid, sessionId: id })),
-        upsertInverseIndex(`sub:${sub}`, id, willExpireIn)
-          .catch(handleRedisError('set_sub_index', { sub, sessionId: id }))
+        upsertInverseIndex(`sid:${sid}`, id, willExpireIn).catch(
+          handleRedisError("set_sid_index", { sid, sessionId: id }),
+        ),
+        upsertInverseIndex(`sub:${sub}`, id, willExpireIn).catch(
+          handleRedisError("set_sub_index", { sub, sessionId: id }),
+        ),
       ]
 
       await executeTasksWithErrorAggregation(tasks)
@@ -82,16 +77,14 @@ export const auth0 = new Auth0Client({
       if (sid) {
         const sessionIds = await redis.smembers(`sid:${sid}`)
         tasks.push(
-          deleteSessionsBatch(sessionIds, `sid:${sid}`)
-            .catch(handleRedisError('delete_sessions_by_sid', { sid }))
+          deleteSessionsBatch(sessionIds, `sid:${sid}`).catch(handleRedisError("delete_sessions_by_sid", { sid })),
         )
       }
 
       if (sub) {
         const sessionIds = await redis.smembers(`sub:${sub}`)
         tasks.push(
-          deleteSessionsBatch(sessionIds, `sub:${sub}`)
-            .catch(handleRedisError('delete_sessions_by_sub', { sub }))
+          deleteSessionsBatch(sessionIds, `sub:${sub}`).catch(handleRedisError("delete_sessions_by_sub", { sub })),
         )
       }
 
