@@ -2,7 +2,7 @@
 
 ## **Project Overview**
 **Purpose**: Comprehensive Auth0 authentication testing platform built with Next.js 15
-**Core Function**: Demonstrates and tests multiple Auth0 authentication flows (Regular Web App, SPA with auth0-spa-js, SPA with Auth0 Lock, MFA API testing)
+**Core Function**: Demonstrates and tests multiple Auth0 authentication flows (Regular Web App, SPA with auth0-spa-js, SPA with Auth0 Lock, SPA with auth0.js, MFA API testing)
 
 ## **Tech Stack & Dependencies**
 
@@ -16,6 +16,7 @@
 - **@auth0/nextjs-auth0 v4.8.0** - Server-side Auth0 integration
 - **@auth0/auth0-spa-js v2.3.0** - Client-side SPA authentication
 - **Auth0 Lock v14.0.0** - Legacy authentication widget (CDN)
+- **auth0.js v9.28.0** - Auth0 JavaScript SDK for embedded login (CDN)
 
 ### **UI & Image Processing**
 - **next/image** - Optimized image rendering
@@ -110,7 +111,20 @@
 - Route handler returns HTML with proper content-type headers
 - In-memory session storage
 
-#### **6. MFA API Tester (`/mfa/`)**
+#### **6. SPA auth0.js (`/spa/auth0-js/`)**
+
+**Files**: `route.ts` (API route), `auth0-js.html`
+
+**Features:**
+- Embedded login experience with auth0.js SDK
+- Toggle between login and signup forms
+- Database connection authentication (Username-Password-Authentication)
+- Custom form controls with validation
+- Session token display (access, ID tokens and user profile)
+- Safe URL hash clearing using `history.replaceState()`
+- In-memory session storage for testing
+
+#### **7. MFA API Tester (`/mfa/`)**
 
 **Files**: `page.tsx`, `Authenticators.tsx`, `OTPEnrollment.tsx`, `PushEnrollment.tsx`, `MFAErrorFallback.tsx`, `mfa.module.css`
 
@@ -245,7 +259,15 @@
 - Embedded authentication UI
 - In-memory session storage for security
 
-### **4. MFA API Testing**
+### **4. SPA auth0.js (Embedded Login)**
+- auth0.js v9.28.0 via CDN
+- Custom embedded login and signup forms
+- Database connection authentication
+- Toggle functionality between login/signup modes
+- Full control over authentication UI and flow
+- Token display and session management
+
+### **5. MFA API Testing**
 - **Authenticator Management**: List, view, and delete enrolled authenticators
 - **OTP Enrollment**: Complete TOTP authenticator enrollment flow
   - QR code generation using qrcode library
@@ -419,8 +441,9 @@ npm run switchenv <file> # Switch environment files
 ### **Testing Authentication Flows**
 1. **RWA**: Visit `/rwa` - server-side auth with parameter editor
 2. **SPA SDK**: Visit `/spa/auth0-spa-js` - client-side auth with redirect/popup
-3. **SPA Lock**: Visit `/spa/lock` - legacy Auth0 Lock widget
-4. **MFA**: Visit `/mfa` - requires login with MFA scopes
+3. **SPA Lock**: Visit `/spa/auth0-lock` - legacy Auth0 Lock widget
+4. **SPA auth0.js**: Visit `/spa/auth0-js` - embedded login with signup toggle
+5. **MFA**: Visit `/mfa` - requires login with MFA scopes
 
 ### **Development Tips**
 - Use `switchenv.mjs` to quickly switch between different Auth0 tenants

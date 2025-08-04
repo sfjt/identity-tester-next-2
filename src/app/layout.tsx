@@ -28,7 +28,10 @@ export default function RootLayout({
                   <a href="/spa/auth0-spa-js">Single Page Application (auth0-spa-js)</a>
                 </li>
                 <li>
-                  <a href="/spa/lock">Single Page Application (auth0-lock)</a>
+                  <a href="/spa/auth0-lock">Single Page Application (auth0-lock)</a>
+                </li>
+                <li>
+                  <a href="/spa/auth0-js">Single Page Application (auth0.js)</a>
                 </li>
                 <li>
                   <LoginToMFATester />

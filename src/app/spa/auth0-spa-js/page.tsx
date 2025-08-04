@@ -15,7 +15,7 @@ async function createClient() {
     useRefreshTokens: true,
     useRefreshTokensFallback: true,
     authorizationParams: {
-      redirect_uri: document.location.href,
+      redirect_uri: document.location.origin + "/spa/auth0-spa-js",
       scope: "openid profile email",
       audience: config.default_audience,
     },
@@ -107,7 +107,7 @@ export default function Page() {
   function logout() {
     client.logout({
       logoutParams: {
-        returnTo: document.location.href,
+        returnTo: document.location.origin + "/spa/auth0-spa-js",
       },
     })
   }

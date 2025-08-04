@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Single Page Application: auth0.js</title>
+  <script src="https://cdn.auth0.com/js/auth0/9.28.0/auth0.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: "Roboto", sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .login-section {
+      margin-bottom: 30px;
+    }
+    .login-form {
+      background-color: #f8f9fa;
+      padding: 20px;
+      border-radius: 4px;
+      margin: 20px 0;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+    .login-btn {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      margin: 10px 5px;
+      width: 100%;
+    }
+    .login-btn:hover {
+      background-color: #0056b3;
+    }
+    .login-btn:disabled {
+      background-color: #6c757d;
+      cursor: not-allowed;
+    }
+    .alt-login-btn {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      margin: 5px;
+    }
+    .alt-login-btn:hover {
+      background-color: #218838;
+    }
+    .logout-btn {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .logout-btn:hover {
+      background-color: #c82333;
+    }
+    .user-info {
+      display: none;
+      background-color: #f8f9fa;
+      padding: 20px;
+      border-radius: 4px;
+      margin-top: 20px;
+    }
+    .token-display {
+      background-color: #e9ecef;
+      padding: 15px;
+      border-radius: 4px;
+      margin: 10px 0;
+      word-break: break-all;
+      font-family: monospace;
+      font-size: 12px;
+    }
+    .loading {
+      text-align: center;
+      color: #666;
+    }
+    .error {
+      color: #dc3545;
+      background-color: #f8d7da;
+      padding: 10px;
+      border-radius: 4px;
+      margin: 10px 0;
+    }
+    .success {
+      color: #155724;
+      background-color: #d4edda;
+      padding: 10px;
+      border-radius: 4px;
+      margin: 10px 0;
+    }
+    .auth-methods {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 15px;
+    }
+    .auth-methods button {
+      flex: 1;
+      min-width: 150px;
+    }
+    .toggle-buttons {
+      display: flex;
+      margin-bottom: 20px;
+      border-radius: 4px;
+      overflow: hidden;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .toggle-btn {
+      flex: 1;
+      padding: 10px 20px;
+      border: none;
+      background-color: #e9ecef;
+      color: #6c757d;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+    .toggle-btn.active {
+      background-color: #007bff;
+      color: white;
+    }
+    .toggle-btn:hover:not(.active) {
+      background-color: #dee2e6;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Single Page Application: auth0.js</h1>
+    
+    <div class="login-section" id="loginSection">
+      <div id="loading" class="loading" style="display: none;">Loading Auth0 configuration...</div>
+      <div id="error" class="error" style="display: none;"></div>
+      <div id="success" class="success" style="display: none;"></div>
+
+      <div id="authForm" class="login-form" style="display: none;">
+        <div class="toggle-buttons">
+          <button id="loginToggle" class="toggle-btn active">Login</button>
+          <button id="signupToggle" class="toggle-btn">Sign Up</button>
+        </div>
+
+        <!-- Login Form -->
+        <div id="loginFormContainer">
+          <h3>Login</h3>
+          <form id="databaseLoginForm">
+            <div class="form-group">
+              <label for="loginEmail">Email:</label>
+              <input type="email" id="loginEmail" name="email" required>
+            </div>
+            <div class="form-group">
+              <label for="loginPassword">Password:</label>
+              <input type="password" id="loginPassword" name="password" required>
+            </div>
+            <button type="submit" class="login-btn">Login</button>
+          </form>
+        </div>
+
+        <!-- Signup Form -->
+        <div id="signupFormContainer" style="display: none;">
+          <h3>Sign Up</h3>
+          <form id="databaseSignupForm">
+            <div class="form-group">
+              <label for="signupEmail">Email:</label>
+              <input type="email" id="signupEmail" name="email" required>
+            </div>
+            <div class="form-group">
+              <label for="signupPassword">Password:</label>
+              <input type="password" id="signupPassword" name="password" required>
+            </div>
+            <button type="submit" class="login-btn">Sign Up</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div id="userInfo" class="user-info">
+      <h3>Welcome, <span id="userName"></span>!</h3>
+      <button id="logoutBtn" class="logout-btn">Logout</button>
+      
+      <h4>User Profile:</h4>
+      <div id="userProfile" class="token-display"></div>
+      
+      <h4>Access Token:</h4>
+      <div id="accessToken" class="token-display"></div>
+      
+      <h4>ID Token:</h4>
+      <div id="idToken" class="token-display"></div>
+    </div>
+  </div>
+
+  <script>
+    let auth0Client
+    let authConfig
+    
+    const authData = {
+      accessToken: null,
+      idToken: null,
+      userProfile: null
+    }
+
+    function showError(message) {
+      document.getElementById("error").textContent = message
+      document.getElementById("error").style.display = "block"
+      document.getElementById("success").style.display = "none"
+    }
+
+    function showSuccess(message) {
+      document.getElementById("success").textContent = message
+      document.getElementById("success").style.display = "block"
+      document.getElementById("error").style.display = "none"
+    }
+
+    function hideMessages() {
+      document.getElementById("error").style.display = "none"
+      document.getElementById("success").style.display = "none"
+    }
+
+    function showLoading() {
+      document.getElementById("loading").style.display = "block"
+      document.getElementById("authForm").style.display = "none"
+    }
+
+    function hideLoading() {
+      document.getElementById("loading").style.display = "none"
+      document.getElementById("authForm").style.display = "block"
+    }
+
+    function showUserInfo(profile, accessToken, idToken) {
+      document.getElementById("loginSection").style.display = "none"
+      document.getElementById("userInfo").style.display = "block"
+      
+      document.getElementById("userName").textContent = profile.name || profile.email || "User"
+      document.getElementById("userProfile").textContent = JSON.stringify(profile, null, 2)
+      document.getElementById("accessToken").textContent = accessToken || "N/A"
+      document.getElementById("idToken").textContent = idToken || "N/A"
+    }
+
+    function showLoginSection() {
+      document.getElementById("loginSection").style.display = "block"
+      document.getElementById("userInfo").style.display = "none"
+      hideMessages()
+    }
+
+    async function fetchAuthConfig() {
+      try {
+        showLoading()
+        hideMessages()
+        
+        const response = await fetch("/api/config")
+        if (!response.ok) {
+          throw new Error("Failed to fetch configuration")
+        }
+        
+        authConfig = await response.json()
+        
+        if (!authConfig.auth0_domain || !authConfig.spa_client_id) {
+          throw new Error("Missing Auth0 configuration")
+        }
+
+        initializeAuth0()
+        hideLoading()
+        
+      } catch (error) {
+        console.error("Error fetching auth config:", error)
+        showError("Failed to load Auth0 configuration: " + error.message)
+        hideLoading()
+      }
+    }
+
+    function initializeAuth0() {
+      auth0Client = new auth0.WebAuth({
+        domain: authConfig.auth0_domain,
+        clientID: authConfig.spa_client_id,
+        redirectUri: window.location.origin + "/spa/auth0-js",
+        responseType: "token id_token",
+        scope: "openid profile email",
+        audience: authConfig.default_audience
+      })
+
+      checkExistingAuth()
+      parseHashAndAuthenticate()
+    }
+
+    function parseHashAndAuthenticate() {
+      auth0Client.parseHash(function(err, authResult) {
+        if (err) {
+          console.error("Authentication error:", err)
+          showError("Authentication failed: " + err.errorDescription)
+          return
+        }
+
+        if (authResult && authResult.accessToken && authResult.idToken) {
+          console.log("Authentication successful:", authResult)
+          
+          auth0Client.client.userInfo(authResult.accessToken, function(err, profile) {
+            if (err) {
+              console.error("Error getting user info:", err)
+              showError("Error getting user information: " + err.error_description)
+              return
+            }
+            
+            console.log("User profile:", profile)
+            showUserInfo(profile, authResult.accessToken, authResult.idToken)
+            
+            authData.accessToken = authResult.accessToken
+            authData.idToken = authResult.idToken
+            authData.userProfile = profile
+
+            // Clear hash from URL
+            window.location.hash = ""
+          })
+        }
+      })
+    }
+
+    function checkExistingAuth() {
+      if (authData.accessToken && authData.userProfile) {
+        try {
+          showUserInfo(authData.userProfile, authData.accessToken, authData.idToken)
+        } catch (error) {
+          console.error("Error with stored user profile:", error)
+          clearStoredAuth()
+        }
+      }
+    }
+
+    function clearStoredAuth() {
+      authData.accessToken = null
+      authData.idToken = null
+      authData.userProfile = null
+    }
+
+    function toggleAuthMode(mode) {
+      const loginToggle = document.getElementById("loginToggle")
+      const signupToggle = document.getElementById("signupToggle")
+      const loginContainer = document.getElementById("loginFormContainer")
+      const signupContainer = document.getElementById("signupFormContainer")
+      
+      if (mode === "login") {
+        loginToggle.classList.add("active")
+        signupToggle.classList.remove("active")
+        loginContainer.style.display = "block"
+        signupContainer.style.display = "none"
+      } else {
+        signupToggle.classList.add("active")
+        loginToggle.classList.remove("active")
+        signupContainer.style.display = "block"
+        loginContainer.style.display = "none"
+      }
+    }
+
+    function loginWithDatabase(email, password) {
+      hideMessages()
+      auth0Client.login({
+        realm: "Username-Password-Authentication",
+        username: email,
+        password: password
+      }, function(err, authResult) {
+        if (err) {
+          console.error("Database login error:", err)
+          showError("Login failed: " + err.description)
+          return
+        }
+        
+        if (authResult) {
+          showSuccess("Login successful! Redirecting...")
+          // The parseHash function will handle the result
+        }
+      })
+    }
+
+    function signupWithDatabase(email, password) {
+      hideMessages()
+      auth0Client.signup({
+        connection: "Username-Password-Authentication",
+        email: email,
+        password: password
+      }, function(err, result) {
+        if (err) {
+          console.error("Database signup error:", err)
+          showError("Signup failed: " + err.description)
+          return
+        }
+        
+        console.log("Signup successful:", result)
+        showSuccess("Account created successfully! You can now login with your credentials.")
+        
+        // Switch to login form after successful signup
+        setTimeout(() => {
+          toggleAuthMode("login")
+          hideMessages()
+        }, 3000)
+      })
+    }
+
+    function loginWithRedirect() {
+      hideMessages()
+      auth0Client.authorize()
+    }
+
+    function logout() {
+      clearStoredAuth()
+      showLoginSection()
+      
+      if (auth0Client) {
+        auth0Client.logout({
+          returnTo: window.location.origin + "/spa/auth0-js"
+        })
+      }
+    }
+
+    // Toggle between login and signup
+    document.getElementById("loginToggle").addEventListener("click", function() {
+      toggleAuthMode("login")
+    })
+
+    document.getElementById("signupToggle").addEventListener("click", function() {
+      toggleAuthMode("signup")
+    })
+
+    // Form submissions
+    document.getElementById("databaseLoginForm").addEventListener("submit", function(e) {
+      e.preventDefault()
+      const email = document.getElementById("loginEmail").value
+      const password = document.getElementById("loginPassword").value
+      loginWithDatabase(email, password)
+    })
+
+    document.getElementById("databaseSignupForm").addEventListener("submit", function(e) {
+      e.preventDefault()
+      const email = document.getElementById("signupEmail").value
+      const password = document.getElementById("signupPassword").value
+      signupWithDatabase(email, password)
+    })
+
+    document.getElementById("logoutBtn").addEventListener("click", logout)
+
+    window.addEventListener("load", () => {
+      fetchAuthConfig()
+    })
+  </script>
+</body>
+</html>

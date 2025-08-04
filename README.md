@@ -18,9 +18,10 @@ Auth0 All-in-One Tester
 - **Single Page Application**
   - Create a Single Page Application in your Auth0 tenant
   - Set the `SPA_CLIENT_ID` environment variable in the `.env.local` file
-  - Allowed Callback URLs: `http://localhost:3000/spa/auth0-spa-js`, `http://localhost:3000/spa/lock`
-  - Allowed Logout URLs: `http://localhost:3000/spa/auth0-spa-js`, `http://localhost:3000/spa/lock`
+  - Allowed Callback URLs: `http://localhost:3000/spa/auth0-spa-js`, `http://localhost:3000/spa/auth0-lock`, `http://localhost:3000/spa/auth0-js`
+  - Allowed Logout URLs: `http://localhost:3000/spa/auth0-spa-js`, `http://localhost:3000/spa/auth0-lock`, `http://localhost:3000/spa/auth0-js`
   - Allowed Web Origins: `http://localhost:3000`
+  - Toggle on Allow Cross-Origin Authentication and add `http://localhost:3000` to Allowed Origins (CORS)
 - **API**
   - Create an API in your Auth0 tenant with the identifier `https://example.com/api/v1/`
 - Start the server by executing `npm run dev`
