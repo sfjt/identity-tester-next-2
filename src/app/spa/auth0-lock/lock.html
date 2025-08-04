@@ -176,7 +176,7 @@
     function initializeLock() {
       lock = new Auth0Lock(authConfig.spa_client_id, authConfig.auth0_domain, {
         auth: {
-          redirectUrl: window.location.origin + "/spa/lock",
+          redirectUrl: window.location.origin + "/spa/auth0-ock",
           responseType: "token id_token",
           audience: authConfig.default_audience,
           params: {
@@ -248,7 +248,7 @@
       
       if (lock) {
         lock.logout({
-          returnTo: window.location.origin + "/spa/lock"
+          returnTo: window.location.origin + "/spa/auth0-lock"
         })
       }
     }
