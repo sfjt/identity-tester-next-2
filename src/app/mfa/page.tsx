@@ -6,7 +6,6 @@ import Authenticators from "./Authenticators"
 import OTPEnrollment from "./OTPEnrollment"
 import PushEnrollment from "./PushEnrollment"
 import MFAErrorFallback from "./MFAErrorFallback"
-import styles from "./mfa.module.css"
 
 const createMFAErrorFallback = (componentName: string) => {
   const fallback = (error: Error) => <MFAErrorFallback error={error} componentName={componentName} />
