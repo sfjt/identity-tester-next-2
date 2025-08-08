@@ -226,7 +226,6 @@
   - `.custom-params-valid` / `.custom-params-invalid-or-empty` - Validation states
 - **MFA Module**: `mfa.module.css` with MFA-specific component styles
   - `.authenticator-item` - Individual authenticator styling
-  - `.security-notice` - Warning banners
   - `.qr-code-image` - QR code display
   - `.otp-input` - OTP input field styling
 - **Naming Convention**: kebab-case (e.g., `custom-params-editor`, `authenticator-item`)
@@ -294,12 +293,6 @@
 ├── MFAErrorFallback.tsx  # MFA-specific error boundary fallback
 └── mfa.module.css        # Component-specific styling
 ```
-
-### **Security Notice Implementation**
-The MFA page includes a prominent security notice warning users that access tokens are visible in the frontend for testing purposes. This is implemented using:
-- `.security-notice` CSS class with yellow warning styling
-- Clear messaging about the testing application trade-offs
-- Positioned at the top of the MFA page for immediate visibility
 
 ### **Key Features**
 - **Expandable UI**: All sections use `<details>` elements for better organization

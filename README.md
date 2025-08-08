@@ -2,6 +2,10 @@
 
 Auth0 All-in-One Tester
 
+## ⚠️ Testing Application Notice
+
+This is a demonstration and testing application for Auth0 authentication flows. The codes are **not intended for production use**. Access tokens and sensitive information may be exposed in the frontend for testing purposes.
+
 ## Quickstart
 
 - Rename `.env.example` to `.env.local`
