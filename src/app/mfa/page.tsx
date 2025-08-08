@@ -19,14 +19,6 @@ export default withPageAuthRequired(() => {
     <main>
       <h2>MFA API Tester</h2>
 
-      <div className={`section ${styles["security-notice"]}`}>
-        <h3>⚠️ Security Notice</h3>
-        <p>
-          <strong>Testing Application:</strong> This app exposes the MFA API access token to the frontend for testing
-          convenience.
-        </p>
-      </div>
-
       <ErrorBoundary fallback={createMFAErrorFallback("Authenticators")}>
         <section className="section">
           <Authenticators />
