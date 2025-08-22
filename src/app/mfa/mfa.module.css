@@ -90,3 +90,32 @@
 .button-group button + button {
   margin-left: 10px;
 }
+
+.phone-input {
+  margin: 0 0 15px 0;
+  padding: 8px;
+  font-size: 16px;
+  width: 200px;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+}
+
+.phone-input:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.phone-valid {
+  border-color: #28a745;
+}
+
+.phone-invalid {
+  border-color: #dc3545;
+}
+
+.phone-help {
+  display: block;
+  margin-top: 5px;
+  color: #666;
+  font-size: 14px;
+}

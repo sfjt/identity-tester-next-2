@@ -5,6 +5,7 @@ import { ErrorBoundary } from "@/components/ErrorBoundary"
 import Authenticators from "./Authenticators"
 import OTPEnrollment from "./OTPEnrollment"
 import PushEnrollment from "./PushEnrollment"
+import SMSEnrollment from "./SMSEnrollment"
 import MFAErrorFallback from "./MFAErrorFallback"
 
 const createMFAErrorFallback = (componentName: string) => {
@@ -33,6 +34,12 @@ export default withPageAuthRequired(() => {
       <ErrorBoundary fallback={createMFAErrorFallback("Push Enrollment")}>
         <section className="section">
           <PushEnrollment />
+        </section>
+      </ErrorBoundary>
+
+      <ErrorBoundary fallback={createMFAErrorFallback("SMS Enrollment")}>
+        <section className="section">
+          <SMSEnrollment />
         </section>
       </ErrorBoundary>
     </main>

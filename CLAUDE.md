@@ -126,16 +126,17 @@
 
 #### **7. MFA API Tester (`/mfa/`)**
 
-**Files**: `page.tsx`, `Authenticators.tsx`, `OTPEnrollment.tsx`, `PushEnrollment.tsx`, `MFAErrorFallback.tsx`, `mfa.module.css`
+**Files**: `page.tsx`, `Authenticators.tsx`, `OTPEnrollment.tsx`, `PushEnrollment.tsx`, `SMSEnrollment.tsx`, `MFAErrorFallback.tsx`, `mfa.module.css`
 
 **Features:**
 - Protected route (`withPageAuthRequired`)
 - Error boundaries for graceful error handling and isolated component failures
 - Expandable sections for better UX organization
-- Three main components with individual error isolation:
+- Four main components with individual error isolation:
   1. **Authenticators**: List/manage enrolled authenticators with delete functionality
   2. **OTP Enrollment**: Complete TOTP authenticator enrollment with QR codes
   3. **Push Enrollment**: Guardian app enrollment with real-time polling
+  4. **SMS Enrollment**: SMS authenticator enrollment with phone number validation
 - Structured data display using `dl`/`dt`/`dd` elements
 - Auto-refresh authenticator list after enrollment/deletion
 - MFA-specific error fallback with troubleshooting guidance
@@ -170,6 +171,15 @@
   - **Pending**: `{ status: "pending", message: "..." }`
   - **Confirmed**: `{ status: "confirmed", tokenData: object }`
 - **Auth0 Grant**: `http://auth0.com/oauth/grant-type/mfa-oob`
+
+#### **MFA SMS Confirmation API (`/api/mfa/sms/confirm/route.ts`)**
+
+- **Purpose**: Secure SMS enrollment confirmation using client secret and binding code
+- **Method**: POST
+- **Body**: `{ oobCode: string, mfaToken: string, bindingCode: string }`
+- **Response**: `{ success: boolean, message: string, tokenData: object }`
+- **Auth0 Grant**: `http://auth0.com/oauth/grant-type/mfa-oob`
+- **Security**: Client secret handled server-side, binding code is the SMS verification code
 
 ### **Static Assets**
 
@@ -228,6 +238,8 @@
   - `.authenticator-item` - Individual authenticator styling
   - `.qr-code-image` - QR code display
   - `.otp-input` - OTP input field styling
+  - `.phone-input` - Phone number input with validation states
+  - `.phone-valid` / `.phone-invalid` - Visual validation feedback
 - **Naming Convention**: kebab-case (e.g., `custom-params-editor`, `authenticator-item`)
 - **Organization**: General styles in globals.css, component-specific in modules
 
@@ -286,10 +298,11 @@
 ### **Component Architecture**
 ```
 /mfa/
-├── page.tsx              # Main MFA route with three expandable sections
+├── page.tsx              # Main MFA route with four expandable sections
 ├── Authenticators.tsx    # List/manage existing authenticators
 ├── OTPEnrollment.tsx     # TOTP enrollment with QR codes
 ├── PushEnrollment.tsx    # Guardian push enrollment with polling
+├── SMSEnrollment.tsx     # SMS enrollment with phone validation
 ├── MFAErrorFallback.tsx  # MFA-specific error boundary fallback
 └── mfa.module.css        # Component-specific styling
 ```
@@ -314,6 +327,14 @@
 3. Start polling `/api/mfa/push/poll` with `oob_code` every 3 seconds
 4. Handle `authorization_pending` vs confirmed responses
 5. Auto-timeout after 5 minutes, cleanup intervals properly
+
+### **SMS Enrollment Flow**
+1. User enters phone number with country code validation
+2. POST `/mfa/associate` with `authenticator_types: ["oob"], oob_channels: ["sms"], phone_number: "+1234567890"`
+3. Auth0 sends SMS verification code to the provided phone number
+4. User enters 6-digit SMS code (binding_code)
+5. POST `/api/mfa/sms/confirm` with `oob_code`, `mfa_token`, and `binding_code`
+6. Display success with full token response
 
 ### **Security Considerations**
 - Client secrets never exposed to frontend
