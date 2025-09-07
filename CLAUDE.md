@@ -4,7 +4,7 @@ This app is a testing application for Auth0 built with the official Auth0 SDK `@
 
 # Commands
 
-- `npm run format`: format the `.ts` and `.tsx` codes under the `src` directory using `prettier`
+- `npm run format`: Formats the `.ts` and `.tsx` code under the `src` directory using `prettier`
 
 # Workflow
 
