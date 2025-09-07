@@ -3,7 +3,7 @@ import { SWRConfig } from "swr"
 import LoginAndOut from "../LoginAndOut"
 import fetchConfig from "@/lib/fetch-config"
 
-jest.mock("@/lib/fetchConfig")
+jest.mock("@/lib/fetch-config")
 
 const mockConfig = {
   auth0_domain: "example.com",
