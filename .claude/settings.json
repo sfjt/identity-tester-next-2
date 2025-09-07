@@ -3,6 +3,8 @@
   "permissions": {
     "allow": [
       "Bash(npm run format)",
+      "Bash(npm run test)",
+      "Bash(npm run test :*)",
       "Bash(git add :*)",
       "Bash(git commit :*)"
     ],

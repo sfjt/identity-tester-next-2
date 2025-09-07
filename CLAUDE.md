@@ -14,6 +14,7 @@ This app is a testing application for Auth0 built with the official Auth0 SDK `@
 - Use ES modules (import/export) syntax, not CommonJS (require)
 - Destructure imports when possible (eg. import { foo } from "bar")
 - Use double quotes (")
+- Don't use semicolons (";") unless needed (e.g., to prevent ASI issues)
 
 # Codebase Structure
 
