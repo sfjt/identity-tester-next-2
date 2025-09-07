@@ -115,12 +115,12 @@ function smsReducer(state: SMSState, action: SMSAction): SMSState {
 function formatPhoneNumber(input: string): string {
   // Remove all non-digits
   const digits = input.replace(/\D/g, "")
-  
+
   // Add + prefix if not present and we have digits
   if (digits.length > 0 && !input.startsWith("+")) {
     return "+" + digits
   }
-  
+
   return input.startsWith("+") ? "+" + digits : digits
 }
 
@@ -167,7 +167,9 @@ export default function SMSEnrollment() {
 
       if (!mfaResponse.ok) {
         const errorData = await mfaResponse.json()
-        throw new Error(`MFA API error: ${mfaResponse.status} - ${errorData.error_description || errorData.error || "Unknown error"}`)
+        throw new Error(
+          `MFA API error: ${mfaResponse.status} - ${errorData.error_description || errorData.error || "Unknown error"}`,
+        )
       }
 
       const data = await mfaResponse.json()
@@ -235,7 +237,7 @@ export default function SMSEnrollment() {
         {!state.enrollmentData ? (
           <div className="section">
             <p>Enroll a new SMS authenticator for MFA. You will receive a verification code via SMS.</p>
-            
+
             <div className={styles["form-group"]}>
               <label htmlFor="phone-number" className={styles["form-label"]}>
                 Phone Number (with country code):
@@ -254,9 +256,9 @@ export default function SMSEnrollment() {
             </div>
 
             <div className={styles["button-group"]}>
-              <button 
-                className="btn btn-primary" 
-                onClick={handleStartEnrollment} 
+              <button
+                className="btn btn-primary"
+                onClick={handleStartEnrollment}
                 disabled={state.isEnrolling || !isPhoneValid}
               >
                 {state.isEnrolling ? "Starting Enrollment..." : "Start SMS Enrollment"}
@@ -268,7 +270,9 @@ export default function SMSEnrollment() {
         ) : (
           <div className="section">
             <h4>SMS Sent</h4>
-            <p>A verification code has been sent to <strong>{state.phoneNumber}</strong></p>
+            <p>
+              A verification code has been sent to <strong>{state.phoneNumber}</strong>
+            </p>
 
             <div className="user-info">
               <h4>Enrollment Details:</h4>
@@ -323,7 +327,9 @@ export default function SMSEnrollment() {
                 <div className={`user-info ${styles["success-message"]}`}>
                   <h4>✅ SMS Enrollment Successful!</h4>
                   <p>Your SMS authenticator has been successfully enrolled for MFA.</p>
-                  <p>Phone number: <strong>{state.phoneNumber}</strong></p>
+                  <p>
+                    Phone number: <strong>{state.phoneNumber}</strong>
+                  </p>
 
                   {state.tokenData && (
                     <>
