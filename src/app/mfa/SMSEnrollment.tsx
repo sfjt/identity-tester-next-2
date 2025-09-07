@@ -3,7 +3,7 @@
 import { useReducer } from "react"
 import { getAccessToken } from "@auth0/nextjs-auth0"
 import { mutate } from "swr"
-import fetchConfig from "@/lib/fetchConfig"
+import fetchConfig from "@/lib/fetch-config"
 import styles from "./mfa.module.css"
 
 interface EnrollmentData {

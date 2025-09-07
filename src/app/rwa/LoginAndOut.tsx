@@ -3,7 +3,7 @@
 import useSWRImmutable from "swr/immutable"
 import { ChangeEvent, useState } from "react"
 
-import fetchConfig from "@/lib/fetchConfig"
+import fetchConfig from "@/lib/fetch-config"
 import styles from "./rwa.module.css"
 
 export default function LoginAndOut() {

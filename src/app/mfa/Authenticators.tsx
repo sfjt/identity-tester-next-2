@@ -4,7 +4,7 @@ import { useState } from "react"
 import useSWR from "swr"
 
 import { getAccessToken } from "@auth0/nextjs-auth0"
-import fetchConfig from "@/lib/fetchConfig"
+import fetchConfig from "@/lib/fetch-config"
 import styles from "./mfa.module.css"
 
 async function getAuthenticators() {

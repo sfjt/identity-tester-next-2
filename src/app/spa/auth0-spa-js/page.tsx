@@ -5,7 +5,7 @@ import { createAuth0Client, PopupTimeoutError } from "@auth0/auth0-spa-js"
 import type { IdToken } from "@auth0/auth0-spa-js"
 import useSWRImmutable from "swr/immutable"
 
-import fetchConfig from "@/lib/fetchConfig"
+import fetchConfig from "@/lib/fetch-config"
 
 async function createClient() {
   const config = await fetchConfig("/api/config")
