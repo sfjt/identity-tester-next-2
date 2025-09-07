@@ -1,6 +1,6 @@
 # Overview
 
-This app is a testing application for Auth0 bilt with the official Auth0 SDK `@auth0/nextjs-auth0`
+This app is a testing application for Auth0 built with the official Auth0 SDK `@auth0/nextjs-auth0`
 
 # Commands
 
@@ -8,7 +8,12 @@ This app is a testing application for Auth0 bilt with the official Auth0 SDK `@a
 
 # Workflow
 
-- Execute `npm run format` when you make changes in codebase
+- Execute `npm run format` when you make changes in the codebase
+
+# Code Style
+- Use ES modules (import/export) syntax, not CommonJS (require)
+- Destructure imports when possible (eg. import { foo } from "bar")
+- Use double quotes (")
 
 # Codebase Structure
 
