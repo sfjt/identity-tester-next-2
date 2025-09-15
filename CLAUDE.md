@@ -4,17 +4,24 @@ This app is a testing application for Auth0 built with the official Auth0 SDK `@
 
 # Commands
 
+- `npm test` / `npm test -- <filename>`: Run tests
 - `npm run format`: Formats the `.ts` and `.tsx` code under the `src` directory using `prettier`
 
 # Workflow
 
-- Execute `npm run format` when you make changes in the codebase
+- Execute `npm run format` when you make changes in the codebase under the `src` directory
 
 # Code Style
-- Use ES modules (import/export) syntax, not CommonJS (require)
-- Destructure imports when possible (eg. import { foo } from "bar")
-- Use double quotes (")
-- Don't use semicolons (";") unless needed (e.g., to prevent ASI issues)
+- TypeScript
+  - ES modules
+  - Destructure imports when possible (e.g., `import { foo } from "bar"`)
+- Formatting
+  - 2-space indentation
+  - Double quotes (")
+  - Semicolons (;) not required unless necessary
+- Files
+  - Kebab case (e.g., file-name.ts)
+  - Plece test files alongside source files. Use the suffix `.test.ts(x)`
 
 # Codebase Structure
 
@@ -29,14 +36,10 @@ src/
 │   │       └── sms/       # SMS MFA enrollment & verification
 │   ├── mfa/               # MFA testing UI components
 │   ├── rwa/               # Regular Web Application testing
-│   ├── spa/               # Single Page Application testing
-│   │   ├── auth0-js/      # Auth0.js SDK integration
-│   │   ├── auth0-lock/    # Auth0 Lock widget integration
-│   │   └── auth0-spa-js/  # Auth0 SPA JS SDK integration
-│   ├── layout.tsx
-│   ├── page.tsx
-│   └── globals.css
+│   └── spa/               # Single Page Application testing
+│       ├── auth0-js/      # Auth0.js SDK integration
+│       ├── auth0-lock/    # Auth0 Lock widget integration
+│       └── auth0-spa-js/  # Auth0 SPA JS SDK integration
 ├── components/            # Shared React components
-├── lib/                   # Auth0 configuration and utilities
-└── middleware.ts
+└── lib/                   # Auth0 configuration and utilities
 ```
