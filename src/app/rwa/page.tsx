@@ -13,6 +13,7 @@ export default async function RWAPage() {
       </section>
       <section className="section">
         <h3>Session Details</h3>
+        {session ? <p data-testid="logged-in">(Logged in.)</p> : <></>}
         <div className="user-info">
           <dl>
             <dt>Access Token:</dt>
