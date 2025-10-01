@@ -1,5 +1,7 @@
 import { auth0 } from "@/lib/auth0"
+
 import LoginAndOut from "./LoginAndOut"
+import TokenInfo from "@/components/TokenInfo"
 
 export default async function RWAPage() {
   const session = await auth0.getSession()
@@ -14,14 +16,20 @@ export default async function RWAPage() {
       <section className="section">
         <h3>Session Details</h3>
         {session ? <p data-testid="logged-in">(Logged in.)</p> : <></>}
-        <div className="user-info">
+        <div className="session-info">
           <dl>
             <dt>Access Token:</dt>
-            <dd>{session?.tokenSet.accessToken || "N/A"}</dd>
+            <dd>
+              <TokenInfo jwt={session?.tokenSet.accessToken} />
+            </dd>
             <dt>ID Token:</dt>
-            <dd>{session?.tokenSet.idToken || "N/A"}</dd>
+            <dd>
+              <TokenInfo jwt={session?.tokenSet.idToken} />
+            </dd>
             <dt>Refresh Token:</dt>
-            <dd>{session?.tokenSet.refreshToken || "N/A"}</dd>
+            <dd>
+              <p className="token">{session?.tokenSet.refreshToken || "N/A"}</p>
+            </dd>
           </dl>
         </div>
       </section>

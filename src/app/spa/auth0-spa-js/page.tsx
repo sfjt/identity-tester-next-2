@@ -6,6 +6,7 @@ import type { IdToken } from "@auth0/auth0-spa-js"
 import useSWRImmutable from "swr/immutable"
 
 import fetchConfig from "@/lib/fetch-config"
+import TokenInfo from "@/components/TokenInfo"
 
 async function createClient() {
   const config = await fetchConfig("/api/config")
@@ -165,13 +166,16 @@ export default function Page() {
       </section>
       <section className="section">
         <h3>Session Details</h3>
-        <div className="user-info">
+        <div className="session-info">
           <dl>
             <dt>Access Token:</dt>
-            <dd>{(state.accessToken ? state.accessToken : data.accessToken) || "N/A"}</dd>
-
+            <dd>
+              <TokenInfo jwt={state.accessToken ? state.accessToken : data.accessToken} />
+            </dd>
             <dt>ID Token:</dt>
-            <dd>{(state.idToken ? state.idToken.__raw : data.idToken?.__raw) || "N/A"}</dd>
+            <dd>
+              <TokenInfo jwt={state.idToken ? state.idToken.__raw : data.idToken?.__raw} />
+            </dd>
           </dl>
         </div>
       </section>
