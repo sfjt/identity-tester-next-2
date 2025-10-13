@@ -1,6 +1,6 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react"
 import { SWRConfig } from "swr"
-import LoginAndOut from "../LoginAndOut"
+import LoginAndOut from "./LoginAndOut"
 import fetchConfig from "@/lib/fetch-config"
 
 jest.mock("@/lib/fetch-config")
