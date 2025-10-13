@@ -21,7 +21,8 @@ This app is a testing application for Auth0 built with the official Auth0 SDK `@
   - Semicolons (;) not required unless necessary
 - Files
   - Kebab case (e.g., file-name.ts)
-  - Plece test files alongside source files. Use the suffix `.test.ts(x)`
+  - Plece unit test files alongside source files. Use the suffix `.test.ts(x)`
+  - Plece e2e test files under the `e2e` directory. Use the suffix `.e2e.ts`
 
 # Codebase Structure
 
