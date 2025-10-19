@@ -63,20 +63,20 @@ describe("Echo Page", () => {
     mockUseSearchParams.mockReturnValue({
       entries: () =>
         [
-          ["email", "test@example.com"],
+          ["email", "test@email.test"],
           ["message", "Hello World!"],
-          ["url", "https://example.com/path?query=1"],
+          ["url", "https://url.test/path?query=1"],
         ][Symbol.iterator](),
     } as any)
 
     render(<EchoPage />)
 
     expect(screen.getByRole("cell", { name: "email" })).toBeInTheDocument()
-    expect(screen.getByRole("cell", { name: "test@example.com" })).toBeInTheDocument()
+    expect(screen.getByRole("cell", { name: "test@email.test" })).toBeInTheDocument()
     expect(screen.getByRole("cell", { name: "message" })).toBeInTheDocument()
     expect(screen.getByRole("cell", { name: "Hello World!" })).toBeInTheDocument()
     expect(screen.getByRole("cell", { name: "url" })).toBeInTheDocument()
-    expect(screen.getByRole("cell", { name: "https://example.com/path?query=1" })).toBeInTheDocument()
+    expect(screen.getByRole("cell", { name: "https://url.test/path?query=1" })).toBeInTheDocument()
   })
 
   it("handles empty string values", () => {

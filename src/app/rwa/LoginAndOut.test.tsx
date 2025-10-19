@@ -6,8 +6,8 @@ import fetchConfig from "@/lib/fetch-config"
 jest.mock("@/lib/fetch-config")
 
 const mockConfig = {
-  auth0_domain: "example.com",
-  default_audience: "https://api.example.com",
+  auth0_domain: "auth0.test",
+  default_audience: "https://api.test/",
 }
 
 const renderWithSWR = (ui: React.ReactElement, { fallback = {} } = {}) => {

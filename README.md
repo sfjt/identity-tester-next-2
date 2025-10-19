@@ -27,5 +27,5 @@ This is a demonstration and testing application for Auth0 authentication flows. 
   - Allowed Web Origins: `http://localhost:3000`
   - Toggle on Allow Cross-Origin Authentication and add `http://localhost:3000` to Allowed Origins (CORS)
 - **API**
-  - Create an API in your Auth0 tenant with the identifier `https://example.com/api/v1/`
+  - Create an API in your Auth0 tenant with the identifier `https://api.test/`
 - Start the server by executing `npm run dev`
