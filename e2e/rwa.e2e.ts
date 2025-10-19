@@ -22,6 +22,7 @@ test("login", async ({ page }) => {
     await page.getByRole("textbox", { name: "Email address" }).fill(e2eTestEmail)
     await page.getByRole("button", { name: "Continue", exact: true }).click()
     await page.getByRole("textbox", { name: "Password" }).fill(e2eTestPassword)
+    await page.getByRole("button", { name: "Continue", exact: true }).click()
   }
 
   if (await page.getByRole("heading", { name: "Authorize App" }).isVisible()) {
