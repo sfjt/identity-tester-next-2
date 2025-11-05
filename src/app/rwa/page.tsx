@@ -13,6 +13,9 @@ export default async function RWAPage() {
         <h3>Login and Logout</h3>
         <LoginAndOut />
       </section>
+      <section>
+        <p><a href="/rwa/tricky-html">Tricky HTML Test</a></p>
+      </section>
       <section className="section">
         <h3>Session Details</h3>
         {session ? <p data-testid="logged-in">(Logged in.)</p> : <></>}
