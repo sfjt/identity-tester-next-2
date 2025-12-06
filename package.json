@@ -14,14 +14,14 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
-    "@auth0/auth0-spa-js": "^2.3.0",
-    "@auth0/nextjs-auth0": "^4.8.0",
-    "@upstash/redis": "^1.35.2",
+    "@auth0/auth0-spa-js": "^2.10.0",
+    "@auth0/nextjs-auth0": "^4.13.2",
+    "@upstash/redis": "^1.35.7",
     "next": "^15.5.7",
     "qrcode": "^1.5.4",
     "react": "^19.1.2",
     "react-dom": "^19.1.2",
-    "swr": "^2.3.4"
+    "swr": "^2.3.7"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
