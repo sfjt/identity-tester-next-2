@@ -74,15 +74,15 @@ export default function Page() {
   if (error) {
     console.error(error)
     return (
-      <main>
-        <p className="error">Something went wrong.</p>
+      <main className="font-['Roboto',sans-serif] bg-white p-8 rounded-lg shadow-md">
+        <p className="text-danger bg-red-100 p-4 rounded my-4">Something went wrong.</p>
       </main>
     )
   }
   if (isLoading || !data) {
     return (
-      <main>
-        <p className="loading">Loading...</p>
+      <main className="font-['Roboto',sans-serif] bg-white p-8 rounded-lg shadow-md">
+        <p className="text-center text-gray-600 p-5">Loading...</p>
       </main>
     )
   }
@@ -137,43 +137,55 @@ export default function Page() {
   }
 
   return (
-    <main>
+    <main className="font-['Roboto',sans-serif] bg-white p-8 rounded-lg shadow-md">
       <h2>Single Page Application: auth0-spa-js</h2>
-      <section className="section">
-        <h3>Login and Logout</h3>
-        <ul className="list-unstyled">
-          <li>
-            <button className="btn btn-primary" onClick={login}>
+      <section className="mb-8">
+        <h3 className="text-gray-800 mb-4 text-lg">Login and Logout</h3>
+        <ul className="list-none p-0 m-0">
+          <li className="mb-3 mt-2">
+            <button
+              className="border-0 rounded cursor-pointer text-base py-3 px-6 m-1 transition-colors bg-primary text-white hover:bg-blue-700"
+              onClick={login}
+            >
               Login with redirect
             </button>
           </li>
-          <li>
-            <button className="btn btn-primary" onClick={loginWithPopup}>
+          <li className="mb-3 mt-2">
+            <button
+              className="border-0 rounded cursor-pointer text-base py-3 px-6 m-1 transition-colors bg-primary text-white hover:bg-blue-700"
+              onClick={loginWithPopup}
+            >
               Login with popup
             </button>
           </li>
-          <li>
-            <button className="btn btn-secondary" onClick={getAndDisplaySessionInfo}>
+          <li className="mb-3 mt-2">
+            <button
+              className="border-0 rounded cursor-pointer transition-colors bg-secondary text-white text-sm py-2 px-4 m-1 hover:bg-gray-700"
+              onClick={getAndDisplaySessionInfo}
+            >
               Get token silently
             </button>
           </li>
-          <li>
-            <button className="btn btn-danger" onClick={logout}>
+          <li className="mb-3 mt-2">
+            <button
+              className="border-0 rounded cursor-pointer text-base py-3 px-6 m-1 transition-colors bg-danger text-white hover:bg-red-700"
+              onClick={logout}
+            >
               Logout
             </button>
           </li>
         </ul>
       </section>
-      <section className="section">
-        <h3>Session Details</h3>
-        <div className="session-info">
+      <section className="mb-8">
+        <h3 className="text-gray-800 mb-4 text-lg">Session Details</h3>
+        <div>
           <dl>
-            <dt>Access Token:</dt>
-            <dd>
+            <dt className="my-2 font-bold text-gray-800">Access Token:</dt>
+            <dd className="m-0">
               <TokenInfo jwt={state.accessToken ? state.accessToken : data.accessToken} />
             </dd>
-            <dt>ID Token:</dt>
-            <dd>
+            <dt className="my-2 font-bold text-gray-800">ID Token:</dt>
+            <dd className="m-0">
               <TokenInfo jwt={state.idToken ? state.idToken.__raw : data.idToken?.__raw} />
             </dd>
           </dl>

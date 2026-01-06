@@ -5,7 +5,6 @@ import useSWR from "swr"
 
 import { getAccessToken } from "@auth0/nextjs-auth0"
 import fetchConfig from "@/lib/fetch-config"
-import styles from "./mfa.module.css"
 
 async function getAuthenticators() {
   const config = await fetchConfig("/api/config")
@@ -45,17 +44,21 @@ function AuthenticatorItem({ authenticator, onDelete, isDeleting }: Authenticato
   }
 
   return (
-    <div className={`user-info ${styles["authenticator-item"]}`}>
+    <div className="bg-gray-50 p-5 rounded mt-5 mb-4">
       <dl>
         {Object.entries(authenticator).map(([key, value]) => (
-          <div key={key} className={styles["property-row"]}>
-            <dt>{key}:</dt>
-            <dd>{typeof value === "boolean" ? (value ? "true" : "false") : String(value)}</dd>
+          <div key={key} className="mb-1">
+            <dt className="font-bold inline">{key}:</dt>
+            <dd className="ml-2 inline">{typeof value === "boolean" ? (value ? "true" : "false") : String(value)}</dd>
           </div>
         ))}
       </dl>
-      <div className={styles["button-container"]}>
-        <button className="btn btn-danger" onClick={handleDelete} disabled={isDeleting}>
+      <div className="ml-0">
+        <button
+          className="border-0 rounded cursor-pointer transition-colors bg-danger text-white hover:bg-red-700 text-sm py-1.5 px-3 m-0"
+          onClick={handleDelete}
+          disabled={isDeleting}
+        >
           {isDeleting ? "Deleting..." : "Delete"}
         </button>
       </div>
@@ -102,10 +105,10 @@ export default function Authenticators() {
 
   if (error) {
     console.error(error)
-    return <p className="error">Something went wrong.</p>
+    return <p className="text-danger bg-red-100 p-4 rounded my-4">Something went wrong.</p>
   }
   if (isLoading || !data) {
-    return <p className="loading">Loading...</p>
+    return <p className="text-center text-gray-600 p-5">Loading...</p>
   }
 
   const authenticators = Array.isArray(data.json) ? data.json : []
@@ -113,18 +116,18 @@ export default function Authenticators() {
   return (
     <div>
       <details open>
-        <summary className="expandable-summary">
-          <h3>Authenticators</h3>
+        <summary className="cursor-pointer text-xl font-bold mb-4">
+          <h3 className="inline m-0">Authenticators</h3>
         </summary>
-        <div className="user-info">
+        <div className="bg-gray-50 p-5 rounded mt-5">
           <h4>HTTP Status:</h4>
-          <div className="token-display">{data.status}</div>
+          <div className="bg-gray-200 p-4 rounded my-3 break-all font-mono text-xs">{data.status}</div>
 
-          <h4 className={styles["section-header"]}>Authenticators ({authenticators.length}):</h4>
+          <h4 className="mb-3">Authenticators ({authenticators.length}):</h4>
           {authenticators.length > 0 ? (
             authenticators.map((authenticator: Authenticator, index: number) => (
-              <div key={authenticator.id || index} className={styles["authenticator-list-item"]}>
-                <h5 className={styles["authenticator-header"]}>Authenticator {index + 1}</h5>
+              <div key={authenticator.id || index} className="mb-3">
+                <h5 className="m-0 mb-2 text-base text-gray-600">Authenticator {index + 1}</h5>
                 <AuthenticatorItem
                   authenticator={authenticator}
                   onDelete={handleDelete}
@@ -136,9 +139,9 @@ export default function Authenticators() {
             <p>No authenticators found.</p>
           )}
 
-          <details className={styles["raw-json-details"]}>
-            <summary className={styles["raw-json-summary"]}>Show Raw JSON Response</summary>
-            <div className="token-display">
+          <details className="mt-5">
+            <summary className="cursor-pointer font-bold">Show Raw JSON Response</summary>
+            <div className="bg-gray-200 p-4 rounded my-3 break-all font-mono text-xs">
               <pre>{JSON.stringify(data.json, null, 2)}</pre>
             </div>
           </details>

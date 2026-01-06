@@ -7,28 +7,30 @@ export default async function RWAPage() {
   const session = await auth0.getSession()
 
   return (
-    <main>
+    <main className="font-['Roboto',sans-serif] bg-white p-8 rounded-lg shadow-md">
       <h2>Regular Web Application</h2>
-      <section className="section">
-        <h3>Login and Logout</h3>
+      <section className="mb-8">
+        <h3 className="text-gray-800 mb-4 text-lg">Login and Logout</h3>
         <LoginAndOut />
       </section>
-      <section className="section">
-        <h3>Session Details</h3>
+      <section className="mb-8">
+        <h3 className="text-gray-800 mb-4 text-lg">Session Details</h3>
         {session ? <p data-testid="logged-in">(Logged in.)</p> : <></>}
-        <div className="session-info">
+        <div>
           <dl>
-            <dt>Access Token:</dt>
-            <dd>
+            <dt className="my-2 font-bold text-gray-800">Access Token:</dt>
+            <dd className="m-0">
               <TokenInfo jwt={session?.tokenSet.accessToken} />
             </dd>
-            <dt>ID Token:</dt>
-            <dd>
+            <dt className="my-2 font-bold text-gray-800">ID Token:</dt>
+            <dd className="m-0">
               <TokenInfo jwt={session?.tokenSet.idToken} />
             </dd>
-            <dt>Refresh Token:</dt>
-            <dd>
-              <p className="token">{session?.tokenSet.refreshToken || "N/A"}</p>
+            <dt className="my-2 font-bold text-gray-800">Refresh Token:</dt>
+            <dd className="m-0">
+              <p className="bg-gray-200 p-3 rounded font-mono text-xs break-all">
+                {session?.tokenSet.refreshToken || "N/A"}
+              </p>
             </dd>
           </dl>
         </div>
