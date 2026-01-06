@@ -2,25 +2,24 @@
 
 import { Suspense } from "react"
 import { useSearchParams } from "next/navigation"
-import styles from "./echo.module.css"
 
 function EchoTable() {
   const searchParams = useSearchParams()
   const params = Array.from(searchParams.entries())
 
   return (
-    <table className={styles.table}>
+    <table className="border-collapse w-full mt-5">
       <thead>
         <tr>
-          <th>Key</th>
-          <th>Value</th>
+          <th className="border border-gray-300 p-3 text-left bg-gray-100 font-bold">Key</th>
+          <th className="border border-gray-300 p-3 text-left bg-gray-100 font-bold">Value</th>
         </tr>
       </thead>
       <tbody>
         {params.map(([key, value]) => (
-          <tr key={key}>
-            <td>{key}</td>
-            <td>{value}</td>
+          <tr key={key} className="hover:bg-gray-50">
+            <td className="border border-gray-300 p-3">{key}</td>
+            <td className="border border-gray-300 p-3">{value}</td>
           </tr>
         ))}
       </tbody>

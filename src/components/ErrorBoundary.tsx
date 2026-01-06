@@ -38,19 +38,27 @@ export class ErrorBoundary extends Component<Props, State> {
         return fallback
       } else {
         return (
-          <div className="error-boundary">
-            <h3>Something went wrong</h3>
+          <div className="bg-red-100 border border-red-300 text-red-900 p-5 rounded my-5">
+            <h3 className="text-red-900 mt-0 mb-4">Something went wrong</h3>
             <p>An unexpected error occurred. Please try refreshing the page.</p>
-            <details className="error-details">
-              <summary>Technical Details</summary>
+            <details className="my-4">
+              <summary className="cursor-pointer font-bold mb-3 text-red-900 hover:text-danger">
+                Technical Details
+              </summary>
               <pre>{this.state.error?.message}</pre>
               <pre>{this.state.error?.stack}</pre>
             </details>
-            <div className="error-actions">
-              <button className="btn btn-primary" onClick={() => this.setState({ hasError: false, error: undefined })}>
+            <div className="mt-4 flex gap-3 flex-wrap">
+              <button
+                className="border-0 rounded cursor-pointer text-base py-3 px-6 m-1 transition-colors bg-primary text-white hover:bg-blue-700"
+                onClick={() => this.setState({ hasError: false, error: undefined })}
+              >
                 Try Again
               </button>
-              <button className="btn btn-secondary" onClick={() => window.location.reload()}>
+              <button
+                className="border-0 rounded cursor-pointer transition-colors bg-secondary text-white text-sm py-2 px-4 m-1 hover:bg-gray-700"
+                onClick={() => window.location.reload()}
+              >
                 Refresh Page
               </button>
             </div>

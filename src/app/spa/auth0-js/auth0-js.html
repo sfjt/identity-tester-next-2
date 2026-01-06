@@ -6,219 +6,88 @@
   <title>Single Page Application: auth0.js</title>
   <script src="https://cdn.auth0.com/js/auth0/9.28.0/auth0.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#007bff',
+            danger: '#dc3545',
+            success: '#28a745',
+            secondary: '#6c757d',
+          }
+        }
+      }
+    }
+  </script>
   <style>
     body {
       font-family: "Roboto", sans-serif;
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 20px;
-      background-color: #f5f5f5;
-    }
-    .container {
-      background: white;
-      padding: 30px;
-      border-radius: 8px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    }
-    .login-section {
-      margin-bottom: 30px;
-    }
-    .login-form {
-      background-color: #f8f9fa;
-      padding: 20px;
-      border-radius: 4px;
-      margin: 20px 0;
-    }
-    .form-group {
-      margin-bottom: 15px;
-    }
-    .form-group label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: 500;
-    }
-    .form-group input {
-      width: 100%;
-      padding: 8px 12px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      font-size: 14px;
-      box-sizing: border-box;
-    }
-    .login-btn {
-      background-color: #007bff;
-      color: white;
-      border: none;
-      padding: 12px 24px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 16px;
-      margin: 10px 5px;
-      width: 100%;
-    }
-    .login-btn:hover {
-      background-color: #0056b3;
-    }
-    .login-btn:disabled {
-      background-color: #6c757d;
-      cursor: not-allowed;
-    }
-    .alt-login-btn {
-      background-color: #28a745;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 14px;
-      margin: 5px;
-    }
-    .alt-login-btn:hover {
-      background-color: #218838;
-    }
-    .logout-btn {
-      background-color: #dc3545;
-      color: white;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 14px;
-    }
-    .logout-btn:hover {
-      background-color: #c82333;
-    }
-    .user-info {
-      display: none;
-      background-color: #f8f9fa;
-      padding: 20px;
-      border-radius: 4px;
-      margin-top: 20px;
-    }
-    .token-display {
-      background-color: #e9ecef;
-      padding: 15px;
-      border-radius: 4px;
-      margin: 10px 0;
-      word-break: break-all;
-      font-family: monospace;
-      font-size: 12px;
-    }
-    .loading {
-      text-align: center;
-      color: #666;
-    }
-    .error {
-      color: #dc3545;
-      background-color: #f8d7da;
-      padding: 10px;
-      border-radius: 4px;
-      margin: 10px 0;
-    }
-    .success {
-      color: #155724;
-      background-color: #d4edda;
-      padding: 10px;
-      border-radius: 4px;
-      margin: 10px 0;
-    }
-    .auth-methods {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 15px;
-    }
-    .auth-methods button {
-      flex: 1;
-      min-width: 150px;
-    }
-    .toggle-buttons {
-      display: flex;
-      margin-bottom: 20px;
-      border-radius: 4px;
-      overflow: hidden;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
-    .toggle-btn {
-      flex: 1;
-      padding: 10px 20px;
-      border: none;
-      background-color: #e9ecef;
-      color: #6c757d;
-      cursor: pointer;
-      font-size: 14px;
-      transition: all 0.2s;
-    }
-    .toggle-btn.active {
-      background-color: #007bff;
-      color: white;
-    }
-    .toggle-btn:hover:not(.active) {
-      background-color: #dee2e6;
     }
   </style>
 </head>
-<body>
-  <div class="container">
-    <h1>Single Page Application: auth0.js</h1>
-    
-    <div class="login-section" id="loginSection">
-      <div id="loading" class="loading" style="display: none;">Loading Auth0 configuration...</div>
-      <div id="error" class="error" style="display: none;"></div>
-      <div id="success" class="success" style="display: none;"></div>
+<body class="bg-gray-100 max-w-3xl mx-auto p-5">
+  <div class="bg-white p-8 rounded-lg shadow-md">
+    <h1 class="text-3xl font-bold text-gray-800 mb-5">Single Page Application: auth0.js</h1>
 
-      <div id="authForm" class="login-form" style="display: none;">
-        <div class="toggle-buttons">
-          <button id="loginToggle" class="toggle-btn active">Login</button>
-          <button id="signupToggle" class="toggle-btn">Sign Up</button>
+    <div class="mb-8" id="loginSection">
+      <div id="loading" class="text-center text-gray-600" style="display: none;">Loading Auth0 configuration...</div>
+      <div id="error" class="text-danger bg-red-100 p-2.5 rounded my-2.5" style="display: none;"></div>
+      <div id="success" class="text-green-900 bg-green-100 p-2.5 rounded my-2.5" style="display: none;"></div>
+
+      <div id="authForm" class="bg-gray-50 p-5 rounded my-5" style="display: none;">
+        <div class="flex mb-5 rounded overflow-hidden shadow-sm">
+          <button id="loginToggle" class="flex-1 py-2.5 px-5 border-0 bg-primary text-white cursor-pointer text-sm transition-all">Login</button>
+          <button id="signupToggle" class="flex-1 py-2.5 px-5 border-0 bg-gray-200 text-secondary cursor-pointer text-sm transition-all hover:bg-gray-300">Sign Up</button>
         </div>
 
         <!-- Login Form -->
         <div id="loginFormContainer">
-          <h3>Login</h3>
+          <h3 class="text-xl font-semibold mb-3">Login</h3>
           <form id="databaseLoginForm">
-            <div class="form-group">
-              <label for="loginEmail">Email:</label>
-              <input type="email" id="loginEmail" name="email" required>
+            <div class="mb-4">
+              <label for="loginEmail" class="block mb-1 font-medium">Email:</label>
+              <input type="email" id="loginEmail" name="email" required class="w-full py-2 px-3 border border-gray-300 rounded text-sm box-border">
             </div>
-            <div class="form-group">
-              <label for="loginPassword">Password:</label>
-              <input type="password" id="loginPassword" name="password" required>
+            <div class="mb-4">
+              <label for="loginPassword" class="block mb-1 font-medium">Password:</label>
+              <input type="password" id="loginPassword" name="password" required class="w-full py-2 px-3 border border-gray-300 rounded text-sm box-border">
             </div>
-            <button type="submit" class="login-btn">Login</button>
+            <button type="submit" class="bg-primary text-white border-0 py-3 px-6 rounded cursor-pointer text-base my-2.5 mx-1 w-full hover:bg-blue-700 disabled:bg-secondary disabled:cursor-not-allowed">Login</button>
           </form>
         </div>
 
         <!-- Signup Form -->
         <div id="signupFormContainer" style="display: none;">
-          <h3>Sign Up</h3>
+          <h3 class="text-xl font-semibold mb-3">Sign Up</h3>
           <form id="databaseSignupForm">
-            <div class="form-group">
-              <label for="signupEmail">Email:</label>
-              <input type="email" id="signupEmail" name="email" required>
+            <div class="mb-4">
+              <label for="signupEmail" class="block mb-1 font-medium">Email:</label>
+              <input type="email" id="signupEmail" name="email" required class="w-full py-2 px-3 border border-gray-300 rounded text-sm box-border">
             </div>
-            <div class="form-group">
-              <label for="signupPassword">Password:</label>
-              <input type="password" id="signupPassword" name="password" required>
+            <div class="mb-4">
+              <label for="signupPassword" class="block mb-1 font-medium">Password:</label>
+              <input type="password" id="signupPassword" name="password" required class="w-full py-2 px-3 border border-gray-300 rounded text-sm box-border">
             </div>
-            <button type="submit" class="login-btn">Sign Up</button>
+            <button type="submit" class="bg-primary text-white border-0 py-3 px-6 rounded cursor-pointer text-base my-2.5 mx-1 w-full hover:bg-blue-700 disabled:bg-secondary disabled:cursor-not-allowed">Sign Up</button>
           </form>
         </div>
       </div>
     </div>
 
-    <div id="userInfo" class="user-info">
-      <h3>Welcome, <span id="userName"></span>!</h3>
-      <button id="logoutBtn" class="logout-btn">Logout</button>
-      
-      <h4>User Profile:</h4>
-      <div id="userProfile" class="token-display"></div>
-      
-      <h4>Access Token:</h4>
-      <div id="accessToken" class="token-display"></div>
-      
-      <h4>ID Token:</h4>
-      <div id="idToken" class="token-display"></div>
+    <div id="userInfo" class="bg-gray-50 p-5 rounded mt-5" style="display: none;">
+      <h3 class="text-xl font-semibold mb-3">Welcome, <span id="userName"></span>!</h3>
+      <button id="logoutBtn" class="bg-danger text-white border-0 py-2 px-4 rounded cursor-pointer text-sm hover:bg-red-700">Logout</button>
+
+      <h4 class="text-lg font-semibold mt-4 mb-2">User Profile:</h4>
+      <div id="userProfile" class="bg-gray-200 p-4 rounded my-2.5 break-all font-mono text-xs"></div>
+
+      <h4 class="text-lg font-semibold mt-4 mb-2">Access Token:</h4>
+      <div id="accessToken" class="bg-gray-200 p-4 rounded my-2.5 break-all font-mono text-xs"></div>
+
+      <h4 class="text-lg font-semibold mt-4 mb-2">ID Token:</h4>
+      <div id="idToken" class="bg-gray-200 p-4 rounded my-2.5 break-all font-mono text-xs"></div>
     </div>
   </div>
 
@@ -369,15 +238,15 @@
       const signupToggle = document.getElementById("signupToggle")
       const loginContainer = document.getElementById("loginFormContainer")
       const signupContainer = document.getElementById("signupFormContainer")
-      
+
       if (mode === "login") {
-        loginToggle.classList.add("active")
-        signupToggle.classList.remove("active")
+        loginToggle.className = "flex-1 py-2.5 px-5 border-0 bg-primary text-white cursor-pointer text-sm transition-all"
+        signupToggle.className = "flex-1 py-2.5 px-5 border-0 bg-gray-200 text-secondary cursor-pointer text-sm transition-all hover:bg-gray-300"
         loginContainer.style.display = "block"
         signupContainer.style.display = "none"
       } else {
-        signupToggle.classList.add("active")
-        loginToggle.classList.remove("active")
+        signupToggle.className = "flex-1 py-2.5 px-5 border-0 bg-primary text-white cursor-pointer text-sm transition-all"
+        loginToggle.className = "flex-1 py-2.5 px-5 border-0 bg-gray-200 text-secondary cursor-pointer text-sm transition-all hover:bg-gray-300"
         signupContainer.style.display = "block"
         loginContainer.style.display = "none"
       }

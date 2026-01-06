@@ -16,29 +16,29 @@ const createMFAErrorFallback = (componentName: string) => {
 
 export default withPageAuthRequired(() => {
   return (
-    <main>
+    <main className="font-['Roboto',sans-serif] bg-white p-8 rounded-lg shadow-md">
       <h2>MFA API Tester</h2>
 
       <ErrorBoundary fallback={createMFAErrorFallback("Authenticators")}>
-        <section className="section">
+        <section className="mb-8">
           <Authenticators />
         </section>
       </ErrorBoundary>
 
       <ErrorBoundary fallback={createMFAErrorFallback("OTP Enrollment")}>
-        <section className="section">
+        <section className="mb-8">
           <OTPEnrollment />
         </section>
       </ErrorBoundary>
 
       <ErrorBoundary fallback={createMFAErrorFallback("Push Enrollment")}>
-        <section className="section">
+        <section className="mb-8">
           <PushEnrollment />
         </section>
       </ErrorBoundary>
 
       <ErrorBoundary fallback={createMFAErrorFallback("SMS Enrollment")}>
-        <section className="section">
+        <section className="mb-8">
           <SMSEnrollment />
         </section>
       </ErrorBoundary>

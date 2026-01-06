@@ -6,7 +6,6 @@ import QRCode from "qrcode"
 import { getAccessToken } from "@auth0/nextjs-auth0"
 import { mutate } from "swr"
 import fetchConfig from "@/lib/fetch-config"
-import styles from "./mfa.module.css"
 
 interface EnrollmentData {
   authenticator_type: string
@@ -259,32 +258,36 @@ export default function PushEnrollment() {
   return (
     <div>
       <details>
-        <summary className="expandable-summary">
-          <h3>Push Enrollment</h3>
+        <summary className="cursor-pointer text-xl font-bold mb-4">
+          <h3 className="inline m-0">Push Enrollment</h3>
         </summary>
 
         {!state.enrollmentData ? (
-          <div className="section">
+          <div className="mb-8">
             <p>Enroll a new Push authenticator using the Auth0 Guardian app for MFA.</p>
-            <button className="btn btn-primary" onClick={handleStartEnrollment} disabled={state.isEnrolling}>
+            <button
+              className="border-0 rounded cursor-pointer text-base py-3 px-6 m-1 transition-colors bg-primary text-white hover:bg-blue-700"
+              onClick={handleStartEnrollment}
+              disabled={state.isEnrolling}
+            >
               {state.isEnrolling ? "Starting Enrollment..." : "Start Push Enrollment"}
             </button>
-            {state.error && <p className="error">{state.error}</p>}
+            {state.error && <p className="text-danger bg-red-100 p-4 rounded my-4">{state.error}</p>}
           </div>
         ) : (
-          <div className="section">
+          <div className="mb-8">
             <h4>Scan QR Code with Guardian App</h4>
             <p>Use the Auth0 Guardian mobile app to scan this QR code. You have 5 minutes to complete enrollment.</p>
 
-            <div className="user-info">
-              <div className="token-display">
+            <div className="bg-gray-50 p-5 rounded mt-5">
+              <div className="bg-gray-200 p-4 rounded my-3 break-all font-mono text-xs">
                 {state.qrCodeDataUrl ? (
                   <Image
                     src={state.qrCodeDataUrl}
                     alt="QR Code for Push setup"
                     width={200}
                     height={200}
-                    className={styles["qr-code-image"]}
+                    className="max-w-[200px] h-auto"
                   />
                 ) : (
                   <p>Generating QR code...</p>
@@ -292,14 +295,14 @@ export default function PushEnrollment() {
               </div>
 
               <h4>Barcode URI:</h4>
-              <div className="token-display">
+              <div className="bg-gray-200 p-4 rounded my-3 break-all font-mono text-xs">
                 <pre>{state.enrollmentData.barcode_uri}</pre>
               </div>
 
               {state.enrollmentData.recovery_codes && state.enrollmentData.recovery_codes.length > 0 && (
                 <>
                   <h4>Recovery Codes:</h4>
-                  <div className="token-display">
+                  <div className="bg-gray-200 p-4 rounded my-3 break-all font-mono text-xs">
                     <pre>{JSON.stringify(state.enrollmentData.recovery_codes, null, 2)}</pre>
                   </div>
                 </>
@@ -307,17 +310,23 @@ export default function PushEnrollment() {
             </div>
 
             {!state.confirmationSuccess ? (
-              <div className={styles["form-group"]}>
+              <div className="mt-5">
                 {!state.isWaitingForConfirmation ? (
                   <>
                     <p>
                       After scanning the QR code with Guardian app, click the button below to wait for confirmation:
                     </p>
-                    <div className={styles["button-group"]}>
-                      <button className="btn btn-primary" onClick={handleStartWaiting}>
+                    <div className="[&>button+button]:ml-3">
+                      <button
+                        className="border-0 rounded cursor-pointer text-base py-3 px-6 m-1 transition-colors bg-primary text-white hover:bg-blue-700"
+                        onClick={handleStartWaiting}
+                      >
                         Wait for Guardian Confirmation
                       </button>
-                      <button className="btn btn-secondary" onClick={() => dispatch({ type: "RESET" })}>
+                      <button
+                        className="border-0 rounded cursor-pointer transition-colors bg-secondary text-white text-sm py-2 px-4 m-1 hover:bg-gray-700"
+                        onClick={() => dispatch({ type: "RESET" })}
+                      >
                         Cancel
                       </button>
                     </div>
@@ -328,9 +337,9 @@ export default function PushEnrollment() {
                     <p>
                       <small>Polling Auth0 every 3 seconds for confirmation...</small>
                     </p>
-                    <div className={styles["button-group"]}>
+                    <div className="[&>button+button]:ml-3">
                       <button
-                        className="btn btn-secondary"
+                        className="border-0 rounded cursor-pointer transition-colors bg-secondary text-white text-sm py-2 px-4 m-1 hover:bg-gray-700"
                         onClick={() => {
                           dispatch({ type: "CLEAR_POLLING_INTERVAL" })
                           dispatch({ type: "RESET" })
@@ -343,8 +352,8 @@ export default function PushEnrollment() {
                 )}
               </div>
             ) : (
-              <div className={styles["form-group"]}>
-                <div className={`user-info ${styles["success-message"]}`}>
+              <div className="mt-5">
+                <div className="bg-gray-50 p-5 rounded mt-5 bg-green-100 border border-green-300 text-green-900">
                   <h4>✅ Enrollment Successful!</h4>
                   <p>Your Push authenticator has been successfully enrolled for MFA using Guardian app.</p>
                   <p>
@@ -354,13 +363,16 @@ export default function PushEnrollment() {
                   {state.tokenData && (
                     <>
                       <h4>Token Response:</h4>
-                      <div className="token-display">
+                      <div className="bg-gray-200 p-4 rounded my-3 break-all font-mono text-xs">
                         <pre>{JSON.stringify(state.tokenData, null, 2)}</pre>
                       </div>
                     </>
                   )}
 
-                  <button className="btn btn-primary" onClick={() => dispatch({ type: "RESET" })}>
+                  <button
+                    className="border-0 rounded cursor-pointer text-base py-3 px-6 m-1 transition-colors bg-primary text-white hover:bg-blue-700"
+                    onClick={() => dispatch({ type: "RESET" })}
+                  >
                     Enroll Another Authenticator
                   </button>
                 </div>
