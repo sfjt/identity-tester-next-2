@@ -222,21 +222,21 @@ export default function OTPEnrollment() {
           <div className="mb-8">
             <p>Enroll a new OTP (One-Time Password) authenticator for MFA.</p>
             <button
-              className="border-0 rounded cursor-pointer text-base py-3 px-6 m-1 transition-colors bg-primary text-white hover:bg-blue-700"
+              className="border-0 rounded-sm cursor-pointer text-base py-3 px-6 m-1 transition-colors bg-primary text-white hover:bg-blue-700"
               onClick={handleStartEnrollment}
               disabled={state.isEnrolling}
             >
               {state.isEnrolling ? "Starting Enrollment..." : "Start OTP Enrollment"}
             </button>
-            {state.error && <p className="text-danger bg-red-100 p-4 rounded my-4">{state.error}</p>}
+            {state.error && <p className="text-danger bg-red-100 p-4 rounded-sm my-4">{state.error}</p>}
           </div>
         ) : (
           <div className="mb-8">
             <h4>Scan QR Code</h4>
             <p>Use your authenticator app to scan this QR code:</p>
 
-            <div className="bg-gray-50 p-5 rounded mt-5">
-              <div className="bg-gray-200 p-4 rounded my-3 break-all font-mono text-xs">
+            <div className="bg-gray-50 p-5 rounded-sm mt-5">
+              <div className="bg-gray-200 p-4 rounded-sm my-3 break-all font-mono text-xs">
                 {state.qrCodeDataUrl ? (
                   <Image
                     src={state.qrCodeDataUrl}
@@ -251,19 +251,19 @@ export default function OTPEnrollment() {
               </div>
 
               <h4>Manual Entry:</h4>
-              <div className="bg-gray-200 p-4 rounded my-3 break-all font-mono text-xs">
+              <div className="bg-gray-200 p-4 rounded-sm my-3 break-all font-mono text-xs">
                 <strong>Secret:</strong> {state.enrollmentData.secret}
               </div>
 
               <h4>Barcode URI:</h4>
-              <div className="bg-gray-200 p-4 rounded my-3 break-all font-mono text-xs">
+              <div className="bg-gray-200 p-4 rounded-sm my-3 break-all font-mono text-xs">
                 <pre>{state.enrollmentData.barcode_uri}</pre>
               </div>
 
               {state.enrollmentData.recovery_codes && state.enrollmentData.recovery_codes.length > 0 && (
                 <>
                   <h4>Recovery Codes:</h4>
-                  <div className="bg-gray-200 p-4 rounded my-3 break-all font-mono text-xs">
+                  <div className="bg-gray-200 p-4 rounded-sm my-3 break-all font-mono text-xs">
                     <pre>{JSON.stringify(state.enrollmentData.recovery_codes, null, 2)}</pre>
                   </div>
                 </>
@@ -282,18 +282,18 @@ export default function OTPEnrollment() {
                   maxLength={6}
                   value={state.otpCode}
                   onChange={(e) => dispatch({ type: "SET_OTP_CODE", payload: e.target.value.replace(/\D/g, "") })}
-                  className="m-0 mb-4 p-2 text-base w-[120px] text-center rounded border-2 border-gray-300"
+                  className="m-0 mb-4 p-2 text-base w-[120px] text-center rounded-sm border-2 border-gray-300"
                 />
                 <div className="[&>button+button]:ml-3">
                   <button
-                    className="border-0 rounded cursor-pointer text-base py-3 px-6 m-1 transition-colors bg-primary text-white hover:bg-blue-700"
+                    className="border-0 rounded-sm cursor-pointer text-base py-3 px-6 m-1 transition-colors bg-primary text-white hover:bg-blue-700"
                     onClick={handleConfirmEnrollment}
                     disabled={state.isConfirming || state.otpCode.length !== 6}
                   >
                     {state.isConfirming ? "Confirming..." : "Confirm Enrollment"}
                   </button>
                   <button
-                    className="border-0 rounded cursor-pointer transition-colors bg-secondary text-white text-sm py-2 px-4 m-1 hover:bg-gray-700"
+                    className="border-0 rounded-sm cursor-pointer transition-colors bg-secondary text-white text-sm py-2 px-4 m-1 hover:bg-gray-700"
                     onClick={() => dispatch({ type: "RESET" })}
                   >
                     Cancel
@@ -302,21 +302,21 @@ export default function OTPEnrollment() {
               </div>
             ) : (
               <div className="mt-5">
-                <div className="bg-gray-50 p-5 rounded mt-5 bg-green-100 border border-green-300 text-green-900">
+                <div className="bg-gray-50 p-5 rounded-sm mt-5 bg-green-100 border border-green-300 text-green-900">
                   <h4>✅ Enrollment Successful!</h4>
                   <p>Your OTP authenticator has been successfully enrolled for MFA.</p>
 
                   {state.tokenData && (
                     <>
                       <h4>Token Response:</h4>
-                      <div className="bg-gray-200 p-4 rounded my-3 break-all font-mono text-xs">
+                      <div className="bg-gray-200 p-4 rounded-sm my-3 break-all font-mono text-xs">
                         <pre>{JSON.stringify(state.tokenData, null, 2)}</pre>
                       </div>
                     </>
                   )}
 
                   <button
-                    className="border-0 rounded cursor-pointer text-base py-3 px-6 m-1 transition-colors bg-primary text-white hover:bg-blue-700"
+                    className="border-0 rounded-sm cursor-pointer text-base py-3 px-6 m-1 transition-colors bg-primary text-white hover:bg-blue-700"
                     onClick={() => dispatch({ type: "RESET" })}
                   >
                     Enroll Another Authenticator

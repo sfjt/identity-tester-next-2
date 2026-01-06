@@ -15,7 +15,7 @@ export default function LoginAndOut() {
 
   if (error) {
     console.error(error)
-    return <p className="text-danger bg-red-100 p-4 rounded my-4">Something went wrong.</p>
+    return <p className="text-danger bg-red-100 p-4 rounded-sm my-4">Something went wrong.</p>
   }
 
   if (isLoading || !data) {
@@ -78,7 +78,7 @@ export default function LoginAndOut() {
       <ul className="list-none p-0 m-0">
         <li className="mb-3 mt-2">
           <button
-            className="border-0 rounded cursor-pointer text-base py-3 px-6 m-1 transition-colors bg-primary text-white hover:bg-blue-700"
+            className="border-0 rounded-sm cursor-pointer text-base py-3 px-6 m-1 transition-colors bg-primary text-white hover:bg-blue-700"
             onClick={login}
           >
             Login
@@ -86,7 +86,7 @@ export default function LoginAndOut() {
         </li>
         <li className="mb-3 mt-2">
           <button
-            className="border-0 rounded cursor-pointer text-base py-3 px-6 m-1 transition-colors bg-danger text-white hover:bg-red-700"
+            className="border-0 rounded-sm cursor-pointer text-base py-3 px-6 m-1 transition-colors bg-danger text-white hover:bg-red-700"
             onClick={logout}
           >
             Logout
@@ -95,26 +95,26 @@ export default function LoginAndOut() {
         <li className="mb-3 mt-2">
           <div>
             <button
-              className="border-0 rounded cursor-pointer transition-colors bg-secondary text-white text-sm py-2 px-4 m-1 hover:bg-gray-700"
+              className="border-0 rounded-sm cursor-pointer transition-colors bg-secondary text-white text-sm py-2 px-4 m-1 hover:bg-gray-700"
               onClick={toggleEditorVisibility}
             >
               {state.editorVisible ? "-" : "+"} Custom login/logout params
             </button>
-            <div className={state.editorVisible ? "bg-gray-50 p-4 rounded mt-3" : "hidden"}>
+            <div className={state.editorVisible ? "bg-gray-50 p-4 rounded-sm mt-3" : "hidden"}>
               <textarea
                 onChange={parseParams}
                 rows={10}
                 cols={50}
                 id="custom-params"
                 defaultValue={`{\n  \n}`}
-                className="w-full max-w-full border border-gray-400 rounded p-3 font-mono text-sm resize-y bg-white box-border focus:outline-none focus:border-primary focus:shadow-[0_0_0_2px_rgba(0,123,255,0.25)]"
+                className="w-full max-w-full border border-gray-400 rounded-sm p-3 font-mono text-sm resize-y bg-white box-border focus:outline-hidden focus:border-primary focus:shadow-[0_0_0_2px_rgba(0,123,255,0.25)]"
               />
               {state.params.size > 0 ? (
-                <p className="text-success bg-green-100 py-2 px-3 rounded font-mono text-xs mt-3 break-all">
+                <p className="text-success bg-green-100 py-2 px-3 rounded-sm font-mono text-xs mt-3 break-all">
                   {state.params.toString()}
                 </p>
               ) : (
-                <p className="text-danger bg-red-100 py-2 px-3 rounded text-sm mt-3">(Invalid or empty JSON)</p>
+                <p className="text-danger bg-red-100 py-2 px-3 rounded-sm text-sm mt-3">(Invalid or empty JSON)</p>
               )}
             </div>
           </div>

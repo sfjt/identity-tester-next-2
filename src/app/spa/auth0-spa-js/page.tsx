@@ -75,7 +75,7 @@ export default function Page() {
     console.error(error)
     return (
       <main className="font-['Roboto',sans-serif] bg-white p-8 rounded-lg shadow-md">
-        <p className="text-danger bg-red-100 p-4 rounded my-4">Something went wrong.</p>
+        <p className="text-danger bg-red-100 p-4 rounded-sm my-4">Something went wrong.</p>
       </main>
     )
   }
@@ -144,7 +144,7 @@ export default function Page() {
         <ul className="list-none p-0 m-0">
           <li className="mb-3 mt-2">
             <button
-              className="border-0 rounded cursor-pointer text-base py-3 px-6 m-1 transition-colors bg-primary text-white hover:bg-blue-700"
+              className="border-0 rounded-sm cursor-pointer text-base py-3 px-6 m-1 transition-colors bg-primary text-white hover:bg-blue-700"
               onClick={login}
             >
               Login with redirect
@@ -152,7 +152,7 @@ export default function Page() {
           </li>
           <li className="mb-3 mt-2">
             <button
-              className="border-0 rounded cursor-pointer text-base py-3 px-6 m-1 transition-colors bg-primary text-white hover:bg-blue-700"
+              className="border-0 rounded-sm cursor-pointer text-base py-3 px-6 m-1 transition-colors bg-primary text-white hover:bg-blue-700"
               onClick={loginWithPopup}
             >
               Login with popup
@@ -160,7 +160,7 @@ export default function Page() {
           </li>
           <li className="mb-3 mt-2">
             <button
-              className="border-0 rounded cursor-pointer transition-colors bg-secondary text-white text-sm py-2 px-4 m-1 hover:bg-gray-700"
+              className="border-0 rounded-sm cursor-pointer transition-colors bg-secondary text-white text-sm py-2 px-4 m-1 hover:bg-gray-700"
               onClick={getAndDisplaySessionInfo}
             >
               Get token silently
@@ -168,7 +168,7 @@ export default function Page() {
           </li>
           <li className="mb-3 mt-2">
             <button
-              className="border-0 rounded cursor-pointer text-base py-3 px-6 m-1 transition-colors bg-danger text-white hover:bg-red-700"
+              className="border-0 rounded-sm cursor-pointer text-base py-3 px-6 m-1 transition-colors bg-danger text-white hover:bg-red-700"
               onClick={logout}
             >
               Logout

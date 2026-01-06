@@ -32,23 +32,23 @@
     <h1 class="text-3xl font-bold text-gray-800 mb-5">Single Page Application: auth0-lock</h1>
 
     <div class="text-center mb-8" id="loginSection">
-      <button id="loginBtn" class="bg-primary text-white border-0 py-3 px-6 rounded cursor-pointer text-base my-2.5 hover:bg-blue-700">Login with Auth0 Lock</button>
+      <button id="loginBtn" class="bg-primary text-white border-0 py-3 px-6 rounded-sm cursor-pointer text-base my-2.5 hover:bg-blue-700">Login with Auth0 Lock</button>
       <div id="loading" class="text-center text-gray-600" style="display: none;">Loading Auth0 configuration...</div>
-      <div id="error" class="text-danger bg-red-100 p-2.5 rounded my-2.5" style="display: none;"></div>
+      <div id="error" class="text-danger bg-red-100 p-2.5 rounded-sm my-2.5" style="display: none;"></div>
     </div>
 
-    <div id="userInfo" class="bg-gray-50 p-5 rounded mt-5" style="display: none;">
+    <div id="userInfo" class="bg-gray-50 p-5 rounded-sm mt-5" style="display: none;">
       <h2 class="text-gray-800 text-xl font-semibold mb-3">Welcome, <span id="userName"></span>!</h2>
-      <button id="logoutBtn" class="bg-danger text-white border-0 py-2 px-4 rounded cursor-pointer text-sm hover:bg-red-700">Logout</button>
+      <button id="logoutBtn" class="bg-danger text-white border-0 py-2 px-4 rounded-sm cursor-pointer text-sm hover:bg-red-700">Logout</button>
 
       <h3 class="text-lg font-semibold mt-4 mb-2">User Profile:</h3>
-      <div id="userProfile" class="bg-gray-200 p-4 rounded my-2.5 break-all font-mono text-xs"></div>
+      <div id="userProfile" class="bg-gray-200 p-4 rounded-sm my-2.5 break-all font-mono text-xs"></div>
 
       <h3 class="text-lg font-semibold mt-4 mb-2">Access Token:</h3>
-      <div id="accessToken" class="bg-gray-200 p-4 rounded my-2.5 break-all font-mono text-xs"></div>
+      <div id="accessToken" class="bg-gray-200 p-4 rounded-sm my-2.5 break-all font-mono text-xs"></div>
 
       <h3 class="text-lg font-semibold mt-4 mb-2">ID Token:</h3>
-      <div id="idToken" class="bg-gray-200 p-4 rounded my-2.5 break-all font-mono text-xs"></div>
+      <div id="idToken" class="bg-gray-200 p-4 rounded-sm my-2.5 break-all font-mono text-xs"></div>
     </div>
   </div>
 

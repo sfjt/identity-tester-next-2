@@ -28,7 +28,7 @@ export default async function RWAPage() {
             </dd>
             <dt className="my-2 font-bold text-gray-800">Refresh Token:</dt>
             <dd className="m-0">
-              <p className="bg-gray-200 p-3 rounded font-mono text-xs break-all">
+              <p className="bg-gray-200 p-3 rounded-sm font-mono text-xs break-all">
                 {session?.tokenSet.refreshToken || "N/A"}
               </p>
             </dd>

@@ -24,7 +24,7 @@ export default function RootLayout({
                 <li className="m-0">
                   <a
                     href="/rwa"
-                    className="text-primary no-underline py-2 px-3 rounded bg-gray-50 border border-gray-300 transition-all inline-block hover:bg-primary hover:text-white"
+                    className="text-primary no-underline py-2 px-3 rounded-sm bg-gray-50 border border-gray-300 transition-all inline-block hover:bg-primary hover:text-white"
                   >
                     Regular Web Application
                   </a>
@@ -32,7 +32,7 @@ export default function RootLayout({
                 <li className="m-0">
                   <a
                     href="/spa/auth0-spa-js"
-                    className="text-primary no-underline py-2 px-3 rounded bg-gray-50 border border-gray-300 transition-all inline-block hover:bg-primary hover:text-white"
+                    className="text-primary no-underline py-2 px-3 rounded-sm bg-gray-50 border border-gray-300 transition-all inline-block hover:bg-primary hover:text-white"
                   >
                     Single Page Application (auth0-spa-js)
                   </a>
@@ -40,7 +40,7 @@ export default function RootLayout({
                 <li className="m-0">
                   <a
                     href="/spa/auth0-lock"
-                    className="text-primary no-underline py-2 px-3 rounded bg-gray-50 border border-gray-300 transition-all inline-block hover:bg-primary hover:text-white"
+                    className="text-primary no-underline py-2 px-3 rounded-sm bg-gray-50 border border-gray-300 transition-all inline-block hover:bg-primary hover:text-white"
                   >
                     Single Page Application (auth0-lock)
                   </a>
@@ -48,7 +48,7 @@ export default function RootLayout({
                 <li className="m-0">
                   <a
                     href="/spa/auth0-js"
-                    className="text-primary no-underline py-2 px-3 rounded bg-gray-50 border border-gray-300 transition-all inline-block hover:bg-primary hover:text-white"
+                    className="text-primary no-underline py-2 px-3 rounded-sm bg-gray-50 border border-gray-300 transition-all inline-block hover:bg-primary hover:text-white"
                   >
                     Single Page Application (auth0.js)
                   </a>

@@ -9,7 +9,7 @@ export default function LoginToMFATester() {
           scope: "openid profile email enroll offline_access read:authenticators remove:authenticators",
         })
       }
-      className="text-primary no-underline py-2 px-3 rounded bg-gray-50 border border-gray-300 transition-all inline-block hover:bg-primary hover:text-white"
+      className="text-primary no-underline py-2 px-3 rounded-sm bg-gray-50 border border-gray-300 transition-all inline-block hover:bg-primary hover:text-white"
     >
       MFA API Tester
     </a>

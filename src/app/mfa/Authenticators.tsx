@@ -44,7 +44,7 @@ function AuthenticatorItem({ authenticator, onDelete, isDeleting }: Authenticato
   }
 
   return (
-    <div className="bg-gray-50 p-5 rounded mt-5 mb-4">
+    <div className="bg-gray-50 p-5 rounded-sm mt-5 mb-4">
       <dl>
         {Object.entries(authenticator).map(([key, value]) => (
           <div key={key} className="mb-1">
@@ -55,7 +55,7 @@ function AuthenticatorItem({ authenticator, onDelete, isDeleting }: Authenticato
       </dl>
       <div className="ml-0">
         <button
-          className="border-0 rounded cursor-pointer transition-colors bg-danger text-white hover:bg-red-700 text-sm py-1.5 px-3 m-0"
+          className="border-0 rounded-sm cursor-pointer transition-colors bg-danger text-white hover:bg-red-700 text-sm py-1.5 px-3 m-0"
           onClick={handleDelete}
           disabled={isDeleting}
         >
@@ -105,7 +105,7 @@ export default function Authenticators() {
 
   if (error) {
     console.error(error)
-    return <p className="text-danger bg-red-100 p-4 rounded my-4">Something went wrong.</p>
+    return <p className="text-danger bg-red-100 p-4 rounded-sm my-4">Something went wrong.</p>
   }
   if (isLoading || !data) {
     return <p className="text-center text-gray-600 p-5">Loading...</p>
@@ -119,9 +119,9 @@ export default function Authenticators() {
         <summary className="cursor-pointer text-xl font-bold mb-4">
           <h3 className="text-gray-800 inline m-0 font-bold">Authenticators</h3>
         </summary>
-        <div className="bg-gray-50 p-5 rounded mt-5">
+        <div className="bg-gray-50 p-5 rounded-sm mt-5">
           <h4>HTTP Status:</h4>
-          <div className="bg-gray-200 p-4 rounded my-3 break-all font-mono text-xs">{data.status}</div>
+          <div className="bg-gray-200 p-4 rounded-sm my-3 break-all font-mono text-xs">{data.status}</div>
 
           <h4 className="mb-3">Authenticators ({authenticators.length}):</h4>
           {authenticators.length > 0 ? (
@@ -141,7 +141,7 @@ export default function Authenticators() {
 
           <details className="mt-5">
             <summary className="cursor-pointer font-bold">Show Raw JSON Response</summary>
-            <div className="bg-gray-200 p-4 rounded my-3 break-all font-mono text-xs">
+            <div className="bg-gray-200 p-4 rounded-sm my-3 break-all font-mono text-xs">
               <pre>{JSON.stringify(data.json, null, 2)}</pre>
             </div>
           </details>

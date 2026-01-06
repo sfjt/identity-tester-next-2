@@ -247,7 +247,7 @@ export default function SMSEnrollment() {
                 placeholder="+1234567890"
                 value={state.phoneNumber}
                 onChange={(e) => handlePhoneNumberChange(e.target.value)}
-                className={`m-0 mb-4 p-2 text-base w-[200px] border-2 border-gray-300 rounded ${isPhoneValid ? "border-success" : state.phoneNumber ? "border-danger" : ""}`}
+                className={`m-0 mb-4 p-2 text-base w-[200px] border-2 border-gray-300 rounded-sm ${isPhoneValid ? "border-success" : state.phoneNumber ? "border-danger" : ""}`}
               />
               <small className="block mt-1 text-gray-600 text-sm">
                 Enter your phone number with country code (e.g., +1 for US, +44 for UK)
@@ -256,7 +256,7 @@ export default function SMSEnrollment() {
 
             <div className="[&>button+button]:ml-3">
               <button
-                className="border-0 rounded cursor-pointer text-base py-3 px-6 m-1 transition-colors bg-primary text-white hover:bg-blue-700"
+                className="border-0 rounded-sm cursor-pointer text-base py-3 px-6 m-1 transition-colors bg-primary text-white hover:bg-blue-700"
                 onClick={handleStartEnrollment}
                 disabled={state.isEnrolling || !isPhoneValid}
               >
@@ -264,7 +264,7 @@ export default function SMSEnrollment() {
               </button>
             </div>
 
-            {state.error && <p className="text-danger bg-red-100 p-4 rounded my-4">{state.error}</p>}
+            {state.error && <p className="text-danger bg-red-100 p-4 rounded-sm my-4">{state.error}</p>}
           </div>
         ) : (
           <div className="mb-8">
@@ -273,7 +273,7 @@ export default function SMSEnrollment() {
               A verification code has been sent to <strong>{state.phoneNumber}</strong>
             </p>
 
-            <div className="bg-gray-50 p-5 rounded mt-5">
+            <div className="bg-gray-50 p-5 rounded-sm mt-5">
               <h4>Enrollment Details:</h4>
               <dl>
                 <dt>Authenticator Type:</dt>
@@ -281,7 +281,7 @@ export default function SMSEnrollment() {
                 <dt>Channel:</dt>
                 <dd>{state.enrollmentData.oob_channel}</dd>
                 <dt>OOB Code:</dt>
-                <dd className="bg-gray-200 p-4 rounded my-3 break-all font-mono text-xs">
+                <dd className="bg-gray-200 p-4 rounded-sm my-3 break-all font-mono text-xs">
                   {state.enrollmentData.oob_code}
                 </dd>
               </dl>
@@ -289,7 +289,7 @@ export default function SMSEnrollment() {
               {state.enrollmentData.recovery_codes && state.enrollmentData.recovery_codes.length > 0 && (
                 <>
                   <h4>Recovery Codes:</h4>
-                  <div className="bg-gray-200 p-4 rounded my-3 break-all font-mono text-xs">
+                  <div className="bg-gray-200 p-4 rounded-sm my-3 break-all font-mono text-xs">
                     <pre>{JSON.stringify(state.enrollmentData.recovery_codes, null, 2)}</pre>
                   </div>
                 </>
@@ -308,18 +308,18 @@ export default function SMSEnrollment() {
                   maxLength={6}
                   value={state.otpCode}
                   onChange={(e) => dispatch({ type: "SET_OTP_CODE", payload: e.target.value.replace(/\D/g, "") })}
-                  className="m-0 mb-4 p-2 text-base w-[120px] text-center rounded border-2 border-gray-300"
+                  className="m-0 mb-4 p-2 text-base w-[120px] text-center rounded-sm border-2 border-gray-300"
                 />
                 <div className="[&>button+button]:ml-3">
                   <button
-                    className="border-0 rounded cursor-pointer text-base py-3 px-6 m-1 transition-colors bg-primary text-white hover:bg-blue-700"
+                    className="border-0 rounded-sm cursor-pointer text-base py-3 px-6 m-1 transition-colors bg-primary text-white hover:bg-blue-700"
                     onClick={handleConfirmEnrollment}
                     disabled={state.isConfirming || state.otpCode.length !== 6}
                   >
                     {state.isConfirming ? "Confirming..." : "Confirm SMS Enrollment"}
                   </button>
                   <button
-                    className="border-0 rounded cursor-pointer transition-colors bg-secondary text-white text-sm py-2 px-4 m-1 hover:bg-gray-700"
+                    className="border-0 rounded-sm cursor-pointer transition-colors bg-secondary text-white text-sm py-2 px-4 m-1 hover:bg-gray-700"
                     onClick={() => dispatch({ type: "RESET" })}
                   >
                     Cancel
@@ -328,7 +328,7 @@ export default function SMSEnrollment() {
               </div>
             ) : (
               <div className="mt-5">
-                <div className="bg-gray-50 p-5 rounded mt-5 bg-green-100 border border-green-300 text-green-900">
+                <div className="bg-gray-50 p-5 rounded-sm mt-5 bg-green-100 border border-green-300 text-green-900">
                   <h4>✅ SMS Enrollment Successful!</h4>
                   <p>Your SMS authenticator has been successfully enrolled for MFA.</p>
                   <p>
@@ -338,14 +338,14 @@ export default function SMSEnrollment() {
                   {state.tokenData && (
                     <>
                       <h4>Token Response:</h4>
-                      <div className="bg-gray-200 p-4 rounded my-3 break-all font-mono text-xs">
+                      <div className="bg-gray-200 p-4 rounded-sm my-3 break-all font-mono text-xs">
                         <pre>{JSON.stringify(state.tokenData, null, 2)}</pre>
                       </div>
                     </>
                   )}
 
                   <button
-                    className="border-0 rounded cursor-pointer text-base py-3 px-6 m-1 transition-colors bg-primary text-white hover:bg-blue-700"
+                    className="border-0 rounded-sm cursor-pointer text-base py-3 px-6 m-1 transition-colors bg-primary text-white hover:bg-blue-700"
                     onClick={() => dispatch({ type: "RESET" })}
                   >
                     Enroll Another Authenticator
@@ -354,7 +354,7 @@ export default function SMSEnrollment() {
               </div>
             )}
 
-            {state.error && <p className="text-danger bg-red-100 p-4 rounded my-4">{state.error}</p>}
+            {state.error && <p className="text-danger bg-red-100 p-4 rounded-sm my-4">{state.error}</p>}
           </div>
         )}
       </details>
