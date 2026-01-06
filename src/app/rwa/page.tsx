@@ -8,13 +8,13 @@ export default async function RWAPage() {
 
   return (
     <main className="font-['Roboto',sans-serif] bg-white p-8 rounded-lg shadow-md">
-      <h2>Regular Web Application</h2>
+      <h2 className="text-2xl font-bold">Regular Web Application</h2>
       <section className="mb-8">
-        <h3 className="text-gray-800 mb-4 text-lg">Login and Logout</h3>
+        <h3 className="text-gray-800 mb-4 text-lg font-bold">Login and Logout</h3>
         <LoginAndOut />
       </section>
       <section className="mb-8">
-        <h3 className="text-gray-800 mb-4 text-lg">Session Details</h3>
+        <h3 className="text-gray-800 mb-4 text-lg font-bold">Session Details</h3>
         {session ? <p data-testid="logged-in">(Logged in.)</p> : <></>}
         <div>
           <dl>

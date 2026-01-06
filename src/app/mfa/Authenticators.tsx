@@ -117,7 +117,7 @@ export default function Authenticators() {
     <div>
       <details open>
         <summary className="cursor-pointer text-xl font-bold mb-4">
-          <h3 className="inline m-0">Authenticators</h3>
+          <h3 className="inline m-0 font-bold">Authenticators</h3>
         </summary>
         <div className="bg-gray-50 p-5 rounded mt-5">
           <h4>HTTP Status:</h4>

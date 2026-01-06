@@ -6,7 +6,7 @@ interface MFAErrorFallbackProps {
 export default function MFAErrorFallback({ error, componentName = "MFA Component" }: MFAErrorFallbackProps) {
   return (
     <div className="bg-red-100 border border-red-300 text-red-900 p-5 rounded my-5">
-      <h3 className="text-red-900 mt-0 mb-4">{componentName} Error</h3>
+      <h3 className="text-red-900 mt-0 mb-4 font-bold">{componentName} Error</h3>
       <p>There was an issue with the MFA system. This could be due to:</p>
       <ul className="my-3 pl-5">
         <li className="mb-1">Network connectivity issues</li>

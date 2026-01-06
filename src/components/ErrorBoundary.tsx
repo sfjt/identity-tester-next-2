@@ -39,7 +39,7 @@ export class ErrorBoundary extends Component<Props, State> {
       } else {
         return (
           <div className="bg-red-100 border border-red-300 text-red-900 p-5 rounded my-5">
-            <h3 className="text-red-900 mt-0 mb-4">Something went wrong</h3>
+            <h3 className="text-red-900 mt-0 mb-4 font-bold">Something went wrong</h3>
             <p>An unexpected error occurred. Please try refreshing the page.</p>
             <details className="my-4">
               <summary className="cursor-pointer font-bold mb-3 text-red-900 hover:text-danger">

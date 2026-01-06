@@ -17,7 +17,7 @@ const createMFAErrorFallback = (componentName: string) => {
 export default withPageAuthRequired(() => {
   return (
     <main className="font-['Roboto',sans-serif] bg-white p-8 rounded-lg shadow-md">
-      <h2>MFA API Tester</h2>
+      <h2 className="text-2xl font-bold">MFA API Tester</h2>
 
       <ErrorBoundary fallback={createMFAErrorFallback("Authenticators")}>
         <section className="mb-8">

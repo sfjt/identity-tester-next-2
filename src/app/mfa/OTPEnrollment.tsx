@@ -215,7 +215,7 @@ export default function OTPEnrollment() {
     <div>
       <details>
         <summary className="cursor-pointer text-xl font-bold mb-4">
-          <h3 className="inline m-0">OTP Enrollment</h3>
+          <h3 className="inline m-0 font-bold">OTP Enrollment</h3>
         </summary>
 
         {!state.enrollmentData ? (
