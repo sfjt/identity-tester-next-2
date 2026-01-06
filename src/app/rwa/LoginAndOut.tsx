@@ -121,12 +121,12 @@ export default function LoginAndOut() {
         </li>
       </ul>
       <ul className="list-none p-0 m-0">
-        <li className="mb-3">
+        <li>
           <a href={v2LogoutURL} className="text-primary no-underline text-sm break-all hover:underline">
             {v2LogoutURL}
           </a>
         </li>
-        <li className="mb-3">
+        <li>
           <a href={oidcLogoutURL} className="text-primary no-underline text-sm break-all hover:underline">
             {oidcLogoutURL}
           </a>

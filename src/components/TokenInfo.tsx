@@ -7,7 +7,7 @@ export default function TokenInfo(props: { jwt: string | undefined }) {
     <>
       <p className="bg-gray-200 p-3 rounded font-mono text-xs break-all">{jwt}</p>
       <p className="text-right">
-        <a href={`https://jwt.io/#token=${jwt}`} target="_blank">
+        <a href={`https://jwt.io/#token=${jwt}`} target="_blank" className="text-primary no-underline text-sm break-all hover:underline">
           jwt.io
         </a>
       </p>

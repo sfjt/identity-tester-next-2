@@ -138,7 +138,7 @@ export default function Page() {
 
   return (
     <main className="font-['Roboto',sans-serif] bg-white p-8 rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold">Single Page Application: auth0-spa-js</h2>
+      <h2 className="text-gray-800 text-2xl font-bold">Single Page Application: auth0-spa-js</h2>
       <section className="mb-8">
         <h3 className="text-gray-800 mb-4 text-lg font-bold">Login and Logout</h3>
         <ul className="list-none p-0 m-0">

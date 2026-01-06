@@ -259,7 +259,7 @@ export default function PushEnrollment() {
     <div>
       <details>
         <summary className="cursor-pointer text-xl font-bold mb-4">
-          <h3 className="inline m-0 font-bold">Push Enrollment</h3>
+          <h3 className="text-gray-800 inline m-0 font-bold">Push Enrollment</h3>
         </summary>
 
         {!state.enrollmentData ? (

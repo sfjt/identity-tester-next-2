@@ -215,7 +215,7 @@ export default function OTPEnrollment() {
     <div>
       <details>
         <summary className="cursor-pointer text-xl font-bold mb-4">
-          <h3 className="inline m-0 font-bold">OTP Enrollment</h3>
+          <h3 className="text-gray-800 inline m-0 font-bold">OTP Enrollment</h3>
         </summary>
 
         {!state.enrollmentData ? (
@@ -282,7 +282,7 @@ export default function OTPEnrollment() {
                   maxLength={6}
                   value={state.otpCode}
                   onChange={(e) => dispatch({ type: "SET_OTP_CODE", payload: e.target.value.replace(/\D/g, "") })}
-                  className="m-0 mb-4 p-2 text-base w-[120px] text-center"
+                  className="m-0 mb-4 p-2 text-base w-[120px] text-center rounded border-2 border-gray-300"
                 />
                 <div className="[&>button+button]:ml-3">
                   <button
