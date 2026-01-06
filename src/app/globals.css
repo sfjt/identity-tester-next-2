@@ -1,11 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
-@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-body {
-  font-family: "Roboto", sans-serif;
-  @apply bg-gray-100 m-0 p-0;
-}
+@layer base {
+  body {
+    font-family: "Roboto", sans-serif;
+    @apply bg-gray-100 m-0 p-0;
+  }
 
-pre {
-  @apply whitespace-pre-wrap break-all max-w-full overflow-x-auto;
+  pre {
+    @apply whitespace-pre-wrap break-all max-w-full overflow-x-auto;
+  }
 }
