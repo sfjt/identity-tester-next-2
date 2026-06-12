@@ -70,7 +70,7 @@ export default function PasskeyEnrollment({ config }: { config: any }) {
         },
         body: JSON.stringify({
           auth_session,
-          authn_params_public_key: {
+          authn_response: {
             authenticatorAttachment: publicKeyCredential.authenticatorAttachment,
             clientExtensionResults: publicKeyCredential.getClientExtensionResults(),
             id: publicKeyCredential.id,
