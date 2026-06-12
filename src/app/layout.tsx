@@ -1,7 +1,8 @@
 import type { Metadata } from "next"
 
 import "@/app/globals.css"
-import LoginToMFATester from "./LoginToMFATester"
+import LoginToMFAAPITester from "./LoginToMFAAPITester"
+import LoginToMyAccountAPITester from "./LoginToMyAccountAPITester"
 
 export const metadata: Metadata = {
   title: "Identity Tester",
@@ -54,7 +55,10 @@ export default function RootLayout({
                   </a>
                 </li>
                 <li className="m-0">
-                  <LoginToMFATester />
+                  <LoginToMFAAPITester />
+                </li>
+                <li className="m-0">
+                  <LoginToMyAccountAPITester />
                 </li>
               </ul>
             </nav>

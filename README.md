@@ -26,6 +26,6 @@ This is a demonstration and testing application for Auth0 authentication flows. 
   - Allowed Logout URLs: `http://localhost:3000/spa/auth0-spa-js`, `http://localhost:3000/spa/auth0-lock`, `http://localhost:3000/spa/auth0-js`
   - Allowed Web Origins: `http://localhost:3000`
   - Toggle on Allow Cross-Origin Authentication and add `http://localhost:3000` to Allowed Origins (CORS)
-- **API**
+- **APIs**
   - Create an API in your Auth0 tenant with the identifier `https://api.test/`
 - Start the server by executing `npm run dev`

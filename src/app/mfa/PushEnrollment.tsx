@@ -133,7 +133,7 @@ export default function PushEnrollment() {
     dispatch({ type: "START_ENROLLMENT" })
 
     try {
-      const config = await fetchConfig("/api/config")
+      const config = await fetchConfig()
       const url = `https://${config.auth0_domain}/mfa/associate`
 
       const token = await getAccessToken()

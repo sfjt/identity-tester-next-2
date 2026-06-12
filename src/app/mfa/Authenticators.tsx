@@ -7,7 +7,7 @@ import { getAccessToken } from "@auth0/nextjs-auth0"
 import fetchConfig from "@/lib/fetch-config"
 
 async function getAuthenticators() {
-  const config = await fetchConfig("/api/config")
+  const config = await fetchConfig()
   const url = `https://${config.auth0_domain}/mfa/authenticators`
   const token = await getAccessToken()
   const res = await fetch(url, {
@@ -74,7 +74,7 @@ export default function Authenticators() {
     setDeletingIds((prev) => new Set(prev).add(authenticatorId))
 
     try {
-      const config = await fetchConfig("/api/config")
+      const config = await fetchConfig()
       const url = `https://${config.auth0_domain}/mfa/authenticators/${authenticatorId}`
       const token = await getAccessToken()
 

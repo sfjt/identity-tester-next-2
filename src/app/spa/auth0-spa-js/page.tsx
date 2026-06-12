@@ -9,7 +9,7 @@ import fetchConfig from "@/lib/fetch-config"
 import TokenInfo from "@/components/TokenInfo"
 
 async function createClient() {
-  const config = await fetchConfig("/api/config")
+  const config = await fetchConfig()
   const client = await createAuth0Client({
     domain: config.auth0_domain,
     clientId: config.spa_client_id,

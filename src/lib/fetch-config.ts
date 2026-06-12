@@ -1,5 +1,5 @@
-export default async function fetchConfig(uri: string) {
-  const res = await fetch(uri)
+export default async function fetchConfig() {
+  const res = await fetch("/api/config")
   const body = await res.json()
   return {
     ...body,
