@@ -57,6 +57,8 @@ export default function PasskeyEnrollment({ config }: { config: any }) {
       },
     })) as PublicKeyCredential | null
 
+    console.log("PublicKeyCredential:", publicKeyCredential)
+
     if (!publicKeyCredential) {
       return setEnrollmentState({ ...enrollmentState, status: "error", error: "Failed to create credential" })
     }
