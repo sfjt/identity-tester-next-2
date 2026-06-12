@@ -57,11 +57,12 @@ export default function PasskeyEnrollment({ config }: { config: any }) {
       },
     })) as PublicKeyCredential | null
 
-    console.log("PublicKeyCredential:", publicKeyCredential)
-
     if (!publicKeyCredential) {
       return setEnrollmentState({ ...enrollmentState, status: "error", error: "Failed to create credential" })
     }
+
+    const publicKeyCredentialJSON = publicKeyCredential.toJSON() as RegistrationResponseJSON
+    console.log("PublicKeyCredentialJSON:", publicKeyCredentialJSON)
 
     try {
       const response = await fetch(`https://${config.auth0_domain}/me/v1/authentication-methods/passkey|new/verify`, {
@@ -73,15 +74,15 @@ export default function PasskeyEnrollment({ config }: { config: any }) {
         body: JSON.stringify({
           auth_session,
           authn_response: {
-            authenticatorAttachment: publicKeyCredential.authenticatorAttachment,
-            clientExtensionResults: publicKeyCredential.getClientExtensionResults(),
-            id: publicKeyCredential.id,
-            rawId: publicKeyCredential.rawId,
-            type: publicKeyCredential.type,
+            authenticatorAttachment: publicKeyCredentialJSON.authenticatorAttachment,
+            clientExtensionResults: publicKeyCredentialJSON.clientExtensionResults,
+            id: publicKeyCredentialJSON.id,
+            rawId: publicKeyCredentialJSON.rawId,
+            type: publicKeyCredentialJSON.type,
             response: {
-              attestationObject: (publicKeyCredential.response as AuthenticatorAttestationResponse).attestationObject,
-              clientDataJSON: publicKeyCredential.response.clientDataJSON,
-              transports: (publicKeyCredential.response as AuthenticatorAttestationResponse).getTransports(),
+              attestationObject: publicKeyCredentialJSON.response.attestationObject,
+              clientDataJSON: publicKeyCredentialJSON.response.clientDataJSON,
+              transports: publicKeyCredentialJSON.response.transports,
             },
           },
         }),
