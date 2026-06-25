@@ -61,7 +61,7 @@ export default function PasskeyEnrollment({ config }: { config: any }) {
       return setEnrollmentState({ ...enrollmentState, status: "error", error: "Failed to create credential" })
     }
 
-    const publicKeyCredentialJSON = publicKeyCredential.toJSON()
+    const publicKeyCredentialJSON = publicKeyCredential.toJSON() as RegistrationResponseJSON
     console.log("PublicKeyCredentialJSON:", publicKeyCredentialJSON)
 
     try {
@@ -80,9 +80,9 @@ export default function PasskeyEnrollment({ config }: { config: any }) {
             rawId: publicKeyCredentialJSON.rawId,
             type: publicKeyCredentialJSON.type,
             response: {
-              attestationObject: (publicKeyCredentialJSON.response as any).attestationObject,
+              attestationObject: publicKeyCredentialJSON.response.attestationObject,
               clientDataJSON: publicKeyCredentialJSON.response.clientDataJSON,
-              transports: (publicKeyCredentialJSON.response as any).transports,
+              transports: publicKeyCredentialJSON.response.transports,
             },
           },
         }),
