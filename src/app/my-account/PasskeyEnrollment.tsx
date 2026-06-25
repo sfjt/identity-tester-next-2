@@ -102,41 +102,60 @@ export default function PasskeyEnrollment({ config }: { config: any }) {
     return
   }
 
-  if (enrollmentState.status === "default") {
-    return (
-      <button
-        className="border-0 rounded-sm cursor-pointer text-base py-3 px-6 m-1 transition-colors bg-primary text-white hover:bg-blue-700"
-        onClick={initiatePasskeyEnrollment}
-      >
-        Enroll Passkey
-      </button>
-    )
-  }
+  return (
+    <div>
+      <details open>
+        <summary className="cursor-pointer text-xl font-bold mb-4">
+          <h3 className="text-gray-800 inline m-0 font-bold">Passkey Enrollment</h3>
+        </summary>
 
-  if (enrollmentState.status === "enrolling") {
-    return (
-      <div>
-        <p>Passkey enrollment initiated.</p>
-        <pre className="bg-gray-100 p-3 rounded-sm mt-3 overflow-x-auto">
-          {JSON.stringify(enrollmentState.enrollmentInfo, null, 2)}
-        </pre>
-        <button
-          className="border-0 rounded-sm cursor-pointer text-base py-3 px-6 m-1 transition-colors bg-primary text-white hover:bg-blue-700"
-          onClick={confirmPasskeyEnrollment}
-        >
-          Confirm Passkey Enrollment
-        </button>
-      </div>
-    )
-  }
+        {enrollmentState.status === "default" && (
+          <div className="mb-8">
+            <p>Enroll a new passkey for your account.</p>
+            <button
+              className="border-0 rounded-sm cursor-pointer text-base py-3 px-6 m-1 transition-colors bg-primary text-white hover:bg-blue-700"
+              onClick={initiatePasskeyEnrollment}
+            >
+              Enroll Passkey
+            </button>
+          </div>
+        )}
 
-  if (enrollmentState.status === "complete") {
-    return <p>Passkey enrollment complete!</p>
-  }
+        {enrollmentState.status === "enrolling" && (
+          <div className="mb-8">
+            <p>Passkey enrollment initiated.</p>
+            <div className="bg-gray-50 p-5 rounded-sm mt-5">
+              <h4>Enrollment Info:</h4>
+              <div className="bg-gray-200 p-4 rounded-sm my-3 break-all font-mono text-xs">
+                <pre>{JSON.stringify(enrollmentState.enrollmentInfo, null, 2)}</pre>
+              </div>
+            </div>
+            <div className="mt-5">
+              <button
+                className="border-0 rounded-sm cursor-pointer text-base py-3 px-6 m-1 transition-colors bg-primary text-white hover:bg-blue-700"
+                onClick={confirmPasskeyEnrollment}
+              >
+                Confirm Passkey Enrollment
+              </button>
+            </div>
+          </div>
+        )}
 
-  if (enrollmentState.status === "error") {
-    return <p>{enrollmentState.error}</p>
-  }
+        {enrollmentState.status === "complete" && (
+          <div className="mt-5">
+            <div className="bg-green-100 border border-green-300 text-green-900 p-5 rounded-sm">
+              <h4>✅ Passkey Enrollment Successful!</h4>
+              <p>Your passkey has been successfully enrolled.</p>
+            </div>
+          </div>
+        )}
+
+        {enrollmentState.status === "error" && (
+          <p className="text-danger bg-red-100 p-4 rounded-sm my-4">{enrollmentState.error}</p>
+        )}
+      </details>
+    </div>
+  )
 }
 
 function base64UrlToArrayBuffer(base64UrlString: string): ArrayBuffer {
