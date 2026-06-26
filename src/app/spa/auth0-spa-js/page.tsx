@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import type { ChangeEvent } from "react"
 import { createAuth0Client, PopupTimeoutError } from "@auth0/auth0-spa-js"
 import type { IdToken } from "@auth0/auth0-spa-js"
 import useSWRImmutable from "swr/immutable"
@@ -59,16 +60,20 @@ async function createClient() {
   }
 }
 
-interface ISession {
+interface IState {
+  params: { [key: string]: any }
   idToken: IdToken | undefined
   accessToken: string | undefined
+  editorVisible: boolean
 }
 
 export default function Page() {
   const { data, error, isLoading } = useSWRImmutable("/spa/auth0-spa-js", createClient)
-  const [state, setState] = useState<ISession>({
+  const [state, setState] = useState<IState>({
     idToken: undefined,
     accessToken: undefined,
+    params: {},
+    editorVisible: false,
   })
 
   if (error) {
@@ -90,12 +95,12 @@ export default function Page() {
   const { client } = data
 
   function login() {
-    client.loginWithRedirect()
+    client.loginWithRedirect({ authorizationParams: { ...state.params } })
   }
 
   async function loginWithPopup() {
     try {
-      await client.loginWithPopup()
+      await client.loginWithPopup({ authorizationParams: { ...state.params } })
     } catch (err) {
       console.log("loginWithPopup:", err)
       if (err instanceof PopupTimeoutError) {
@@ -108,6 +113,7 @@ export default function Page() {
   function logout() {
     client.logout({
       logoutParams: {
+        ...state.params,
         returnTo: document.location.origin + "/spa/auth0-spa-js",
       },
     })
@@ -131,8 +137,38 @@ export default function Page() {
     }
 
     setState({
+      ...state,
       idToken,
       accessToken,
+    })
+  }
+
+  function toggleEditorVisibility() {
+    setState({
+      ...state,
+      editorVisible: !state.editorVisible,
+    })
+  }
+
+  function parseParams(event: ChangeEvent<HTMLTextAreaElement>) {
+    const v = event.target.value
+    if (!v) {
+      return
+    }
+
+    let j = {}
+    try {
+      j = JSON.parse(v)
+    } catch {
+      setState({
+        ...state,
+        params: {},
+      })
+      return
+    }
+    setState({
+      ...state,
+      params: j,
     })
   }
 
@@ -173,6 +209,33 @@ export default function Page() {
             >
               Logout
             </button>
+          </li>
+          <li className="mb-3 mt-2">
+            <div>
+              <button
+                className="border-0 rounded-sm cursor-pointer transition-colors bg-secondary text-white text-sm py-2 px-4 m-1 hover:bg-gray-700"
+                onClick={toggleEditorVisibility}
+              >
+                {state.editorVisible ? "-" : "+"} Custom login/logout params
+              </button>
+              <div className={state.editorVisible ? "bg-gray-50 p-4 rounded-sm mt-3" : "hidden"}>
+                <textarea
+                  onChange={parseParams}
+                  rows={10}
+                  cols={50}
+                  id="custom-params"
+                  defaultValue={`{\n  \n}`}
+                  className="w-full max-w-full border border-gray-400 rounded-sm p-3 font-mono text-sm resize-y bg-white box-border focus:outline-hidden focus:border-primary focus:shadow-[0_0_0_2px_rgba(0,123,255,0.25)]"
+                />
+                {Object.keys(state.params).length > 0 ? (
+                  <p className="text-success bg-green-100 py-2 px-3 rounded-sm font-mono text-xs mt-3 break-all">
+                    {new URLSearchParams(state.params).toString()}
+                  </p>
+                ) : (
+                  <p className="text-danger bg-red-100 py-2 px-3 rounded-sm text-sm mt-3">(Invalid or empty JSON)</p>
+                )}
+              </div>
+            </div>
           </li>
         </ul>
       </section>

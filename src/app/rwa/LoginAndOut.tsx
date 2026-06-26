@@ -1,7 +1,8 @@
 "use client"
 
 import useSWRImmutable from "swr/immutable"
-import { ChangeEvent, useState } from "react"
+import { useState } from "react"
+import type { ChangeEvent } from "react"
 
 import fetchConfig from "@/lib/fetch-config"
 
