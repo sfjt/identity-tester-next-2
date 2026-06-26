@@ -25,6 +25,11 @@ test("login", async ({ page }) => {
     await page.getByRole("button", { name: "Continue", exact: true }).click()
   }
 
+  if (await page.getByRole("heading", { name: "Create a passkey" }).isVisible()) {
+    // Passkey Enrollment Screen
+    await page.getByRole("button", { name: "Continue without passkeys" }).click()
+  }
+
   if (await page.getByRole("heading", { name: "Authorize App" }).isVisible()) {
     // Consent Screen
     await page.getByRole("button", { name: "Accept" }).click()
