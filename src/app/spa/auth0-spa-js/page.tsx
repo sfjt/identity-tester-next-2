@@ -119,10 +119,14 @@ export default function Page() {
     })
   }
 
-  async function getAndDisplaySessionInfo() {
+  async function getAndDisplaySessionInfo(ignoreCache = false) {
     let accessToken: string | undefined = undefined
     try {
       console.log("Event handler: executing getTokenSilently...")
+      console.log("ignoreCache:", ignoreCache)
+      if (ignoreCache) {
+        accessToken = await client.getTokenSilently({ cacheMode: "off" })
+      }
       accessToken = await client.getTokenSilently()
     } catch (err) {
       console.log(err)
@@ -197,7 +201,7 @@ export default function Page() {
           <li className="mb-3 mt-2">
             <button
               className="border-0 rounded-sm cursor-pointer transition-colors bg-secondary text-white text-sm py-2 px-4 m-1 hover:bg-gray-700"
-              onClick={getAndDisplaySessionInfo}
+              onClick={() => getAndDisplaySessionInfo(true)}
             >
               Get token silently
             </button>
