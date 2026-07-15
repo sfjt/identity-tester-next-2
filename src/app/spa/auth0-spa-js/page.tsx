@@ -16,6 +16,7 @@ async function createClient() {
     clientId: config.spa_client_id,
     useRefreshTokens: true,
     useRefreshTokensFallback: true,
+    useDpop: true,
     authorizationParams: {
       redirect_uri: document.location.origin + "/spa/auth0-spa-js",
       scope: "openid profile email",
@@ -28,7 +29,6 @@ async function createClient() {
   if (useOrt) {
     console.log("SWR: using online refresh token mode")
     clientParams.refreshTokenMode = RefreshTokenMode.Online
-    clientParams.useDpop = true
     clientParams.authorizationParams.redirect_uri = document.location.origin + "/spa/auth0-spa-js?use_ort=true"
   }
 
