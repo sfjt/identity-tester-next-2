@@ -14,7 +14,7 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
-    "@auth0/auth0-spa-js": "^2.21.2",
+    "@auth0/auth0-spa-js": "^2.23.0",
     "@auth0/nextjs-auth0": "^4.23.0",
     "@tailwindcss/postcss": "^4.1.18",
     "@upstash/redis": "^1.36.2",

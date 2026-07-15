@@ -2,8 +2,8 @@
 
 import { useState } from "react"
 import type { ChangeEvent } from "react"
-import { createAuth0Client, PopupTimeoutError } from "@auth0/auth0-spa-js"
-import type { IdToken } from "@auth0/auth0-spa-js"
+import { createAuth0Client, PopupTimeoutError, RefreshTokenMode } from "@auth0/auth0-spa-js"
+import type { IdToken, Auth0ClientOptions } from "@auth0/auth0-spa-js"
 import useSWRImmutable from "swr/immutable"
 
 import fetchConfig from "@/lib/fetch-config"
@@ -11,7 +11,7 @@ import TokenInfo from "@/components/TokenInfo"
 
 async function createClient() {
   const config = await fetchConfig()
-  const client = await createAuth0Client({
+  const clientParams: any = {
     domain: config.auth0_domain,
     clientId: config.spa_client_id,
     useRefreshTokens: true,
@@ -21,9 +21,19 @@ async function createClient() {
       scope: "openid profile email",
       audience: config.default_audience,
     },
-  })
+  }
 
   const searchParams = new URLSearchParams(document.location.search)
+  const useOrt = searchParams.get("use_ort") === "true"
+  if (useOrt) {
+    console.log("SWR: using online refresh token mode")
+    clientParams.refreshTokenMode = RefreshTokenMode.Online
+    clientParams.useDpop = true
+    clientParams.authorizationParams.redirect_uri = document.location.origin + "/spa/auth0-spa-js?use_ort=true"
+  }
+
+  const client = await createAuth0Client(clientParams)
+
   const code = searchParams.get("code")
   const exchangeState = searchParams.get("state")
   if (code && exchangeState) {
