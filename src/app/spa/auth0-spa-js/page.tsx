@@ -136,8 +136,9 @@ export default function Page() {
       console.log("ignoreCache:", ignoreCache)
       if (ignoreCache) {
         accessToken = await client.getTokenSilently({ cacheMode: "off" })
+      } else {
+        accessToken = await client.getTokenSilently()
       }
-      accessToken = await client.getTokenSilently()
     } catch (err) {
       console.log(err)
     }
