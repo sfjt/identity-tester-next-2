@@ -15,11 +15,9 @@ async function createClient() {
     domain: config.auth0_domain,
     clientId: config.spa_client_id,
     useRefreshTokens: true,
-    useRefreshTokensFallback: true,
     useDpop: true,
     authorizationParams: {
       redirect_uri: document.location.origin + "/spa/auth0-spa-js",
-      scope: "openid profile email",
       audience: config.default_audience,
     },
   }
