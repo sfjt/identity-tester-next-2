@@ -47,7 +47,7 @@ async function createClient() {
 
   let accessToken: string | undefined = undefined
   try {
-    console.log("SWR: executing getTokenSilently...")
+    console.log("SWR: executing getTokenSilently (cache-only)...")
     accessToken = await client.getTokenSilently({
       timeoutInSeconds: 5,
       cacheMode: "cache-only",
