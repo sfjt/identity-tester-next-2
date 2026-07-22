@@ -3,7 +3,7 @@
 import { useState } from "react"
 import type { ChangeEvent } from "react"
 import { createAuth0Client, PopupTimeoutError, RefreshTokenMode } from "@auth0/auth0-spa-js"
-import type { IdToken, Auth0ClientOptions } from "@auth0/auth0-spa-js"
+import type { IdToken } from "@auth0/auth0-spa-js"
 import useSWRImmutable from "swr/immutable"
 
 import fetchConfig from "@/lib/fetch-config"
