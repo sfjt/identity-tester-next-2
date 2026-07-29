@@ -65,32 +65,33 @@ export default function PasskeyEnrollment({ config }: { config: any }) {
     console.log("PublicKeyCredentialJSON:", publicKeyCredentialJSON)
 
     try {
+      const payload = JSON.stringify({
+        auth_session,
+        authn_response: {
+          authenticatorAttachment: publicKeyCredentialJSON.authenticatorAttachment,
+          clientExtensionResults: publicKeyCredentialJSON.clientExtensionResults,
+          id: publicKeyCredentialJSON.id,
+          rawId: publicKeyCredentialJSON.rawId,
+          type: publicKeyCredentialJSON.type,
+          response: {
+            attestationObject: publicKeyCredentialJSON.response.attestationObject,
+            clientDataJSON: publicKeyCredentialJSON.response.clientDataJSON,
+            transports: publicKeyCredentialJSON.response.transports,
+          },
+        },
+      })
       const response = await fetch(`https://${config.auth0_domain}/me/v1/authentication-methods/passkey|new/verify`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
         },
-        body: JSON.stringify({
-          auth_session,
-          authn_response: {
-            authenticatorAttachment: publicKeyCredentialJSON.authenticatorAttachment,
-            clientExtensionResults: publicKeyCredentialJSON.clientExtensionResults,
-            id: publicKeyCredentialJSON.id,
-            rawId: publicKeyCredentialJSON.rawId,
-            type: publicKeyCredentialJSON.type,
-            response: {
-              attestationObject: publicKeyCredentialJSON.response.attestationObject,
-              clientDataJSON: publicKeyCredentialJSON.response.clientDataJSON,
-              transports: publicKeyCredentialJSON.response.transports,
-            },
-          },
-        }),
+        body: payload,
       })
       const result = await response.json()
       if (!response.ok) {
         console.log("Error:", result)
-        setEnrollmentState({ ...enrollmentState, status: "error", error: result.error || "Passkey enrollment failed" })
+        setEnrollmentState({ ...enrollmentState, status: "error", error: result.error, enrollmentInfo: payload || "Passkey enrollment failed" })
         return
       }
     } catch (error) {
@@ -151,7 +152,13 @@ export default function PasskeyEnrollment({ config }: { config: any }) {
         )}
 
         {enrollmentState.status === "error" && (
-          <p className="text-danger bg-red-100 p-4 rounded-sm my-4">{enrollmentState.error}</p>
+          <div className="mt-5">
+            <p className="text-danger bg-red-100 p-4 rounded-sm my-4">{enrollmentState.error}</p>
+            <h4>Request payload:</h4>
+            <div className="bg-gray-200 p-4 rounded-sm my-3 break-all font-mono text-xs">
+              <pre>{JSON.stringify(enrollmentState.enrollmentInfo, null, 2)}</pre>
+            </div>
+          </div>
         )}
       </details>
     </div>
