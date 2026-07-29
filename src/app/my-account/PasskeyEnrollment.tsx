@@ -65,7 +65,7 @@ export default function PasskeyEnrollment({ config }: { config: any }) {
     console.log("PublicKeyCredentialJSON:", publicKeyCredentialJSON)
 
     try {
-      const payload = JSON.stringify({
+      const payload = {
         auth_session,
         authn_response: {
           authenticatorAttachment: publicKeyCredentialJSON.authenticatorAttachment,
@@ -79,14 +79,14 @@ export default function PasskeyEnrollment({ config }: { config: any }) {
             transports: publicKeyCredentialJSON.response.transports,
           },
         },
-      })
+      }
       const response = await fetch(`https://${config.auth0_domain}/me/v1/authentication-methods/passkey|new/verify`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
         },
-        body: payload,
+        body: JSON.stringify(payload),
       })
       const result = await response.json()
       if (!response.ok) {
