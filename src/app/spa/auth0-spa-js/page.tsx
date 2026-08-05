@@ -263,7 +263,7 @@ export default function Page() {
       </section>
       <section className="mb-8">
         <h3 className="text-gray-800 mb-4 text-lg font-bold">Session Details</h3>
-        {state.idToken || data.idToken ? <p data-testid="logged-in">(Logged in)</p> : <></>}
+        {state.idToken || data.idToken ? <p data-testid="logged-in">(Logged in.)</p> : <></>}
         <div>
           <dl>
             <dt className="my-2 font-bold text-gray-800">Access Token:</dt>
