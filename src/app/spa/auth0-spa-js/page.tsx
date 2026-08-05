@@ -15,7 +15,6 @@ async function createClient() {
     domain: config.auth0_domain,
     clientId: config.spa_client_id,
     useRefreshTokens: true,
-    useDpop: true,
     authorizationParams: {
       redirect_uri: document.location.origin + "/spa/auth0-spa-js",
       audience: config.default_audience,
@@ -26,6 +25,7 @@ async function createClient() {
   const useOrt = searchParams.get("use_ort") === "true"
   if (useOrt) {
     console.log("SWR: using online refresh token mode")
+    clientParams.useDpop = true
     clientParams.refreshTokenMode = RefreshTokenMode.Online
     clientParams.authorizationParams.redirect_uri = document.location.origin + "/spa/auth0-spa-js?use_ort=true"
   }
@@ -252,9 +252,18 @@ export default function Page() {
             </div>
           </li>
         </ul>
+        <p>
+          <a
+            href={document.location.origin + "/spa/auth0-spa-js?use_ort=true"}
+            className="text-primary no-underline text-sm break-all hover:underline"
+          >
+            Use Online Refresh Token
+          </a>
+        </p>
       </section>
       <section className="mb-8">
         <h3 className="text-gray-800 mb-4 text-lg font-bold">Session Details</h3>
+        {state.idToken || data.idToken ? <p data-testid="logged-in">(Logged in)</p> : <></>}
         <div>
           <dl>
             <dt className="my-2 font-bold text-gray-800">Access Token:</dt>
