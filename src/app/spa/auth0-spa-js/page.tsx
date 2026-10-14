@@ -13,6 +13,7 @@ interface IState {
   params: { [key: string]: any }
   idToken: IdToken | undefined
   accessToken: string | undefined
+  anonSessonToken: string | undefined
   editorVisible: boolean
 }
 
@@ -21,6 +22,7 @@ export default function Page() {
   const [state, setState] = useState<IState>({
     idToken: undefined,
     accessToken: undefined,
+    anonSessonToken: undefined,
     params: {},
     editorVisible: false,
   })
@@ -41,7 +43,7 @@ export default function Page() {
     )
   }
 
-  const { client } = data
+  const { client, config } = data
 
   function login() {
     client.loginWithRedirect({ authorizationParams: { ...state.params } })
@@ -66,6 +68,37 @@ export default function Page() {
         returnTo: document.location.origin + "/spa/auth0-spa-js",
       },
     })
+  }
+
+  async function createAnonymousSession() {
+    try {
+      const { accessToken, sessionToken } = await client.anonymous.createSession({
+        audience: config.default_audience || "",
+        metadata: {
+          ...state.params,
+        },
+      })
+      setState({
+        ...state,
+        accessToken,
+        anonSessonToken: sessionToken,
+      })
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  async function deleteAnonymousSession() {
+    try {
+      await client.anonymous.logout()
+      setState({
+        ...state,
+        accessToken: undefined,
+        anonSessonToken: undefined,
+      })
+    } catch (err) {
+      console.error(err)
+    }
   }
 
   async function getAndDisplaySessionInfo(ignoreCache = false) {
@@ -202,6 +235,27 @@ export default function Page() {
         </p>
       </section>
       <section className="mb-8">
+        <h3 className="text-gray-800 mb-4 text-lg font-bold">Anonymous Session</h3>
+        <ul className="list-none p-0 m-0">
+          <li className="mb-3 mt-2">
+            <button
+              className="border-0 rounded-sm cursor-pointer text-base py-3 px-6 m-1 transition-colors bg-primary text-white hover:bg-blue-700"
+              onClick={createAnonymousSession}
+            >
+              Create Anonymous Session
+            </button>
+          </li>
+          <li className="mb-3 mt-2">
+            <button
+              className="border-0 rounded-sm cursor-pointer text-base py-3 px-6 m-1 transition-colors bg-danger text-white hover:bg-red-700"
+              onClick={deleteAnonymousSession}
+            >
+              Delete Anonymous Session
+            </button>
+          </li>
+        </ul>
+      </section>
+      <section className="mb-8">
         <h3 className="text-gray-800 mb-4 text-lg font-bold">Session Details</h3>
         {state.idToken || data.idToken ? <p data-testid="logged-in">(Logged in.)</p> : <></>}
         <div>
@@ -213,6 +267,10 @@ export default function Page() {
             <dt className="my-2 font-bold text-gray-800">ID Token:</dt>
             <dd className="m-0">
               <TokenInfo jwt={state.idToken ? state.idToken.__raw : data.idToken?.__raw} />
+            </dd>
+            <dt className="my-2 font-bold text-gray-800">Anonymous Session Token:</dt>
+            <dd className="m-0">
+              <TokenInfo jwt={state.anonSessonToken} />
             </dd>
           </dl>
         </div>

@@ -57,6 +57,7 @@ export async function createClient() {
   }
 
   return {
+    config,
     client,
     idToken,
     accessToken,
