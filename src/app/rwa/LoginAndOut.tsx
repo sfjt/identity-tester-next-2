@@ -4,7 +4,6 @@ import { useState } from "react"
 import type { ChangeEvent } from "react"
 
 export default function LoginAndOut() {
-
   const [state, setState] = useState({
     params: new URLSearchParams(),
     editorVisible: false,

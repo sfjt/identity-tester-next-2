@@ -90,7 +90,9 @@ export default function Page() {
 
   async function getAnonymousAccessTokenSilently() {
     try {
-      const { accessToken } = await client.anonymous.getTokenSilently({ audience: process.env.NEXT_PUBLIC_DEFAULT_AUDIENCE || "" })
+      const { accessToken } = await client.anonymous.getTokenSilently({
+        audience: process.env.NEXT_PUBLIC_DEFAULT_AUDIENCE || "",
+      })
       setState({
         ...state,
         accessToken,

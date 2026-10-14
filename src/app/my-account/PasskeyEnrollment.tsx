@@ -80,14 +80,17 @@ export default function PasskeyEnrollment() {
           },
         },
       }
-      const response = await fetch(`https://${process.env.NEXT_PUBLIC_AUTH0_DOMAIN}/me/v1/authentication-methods/passkey|new/verify`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
+      const response = await fetch(
+        `https://${process.env.NEXT_PUBLIC_AUTH0_DOMAIN}/me/v1/authentication-methods/passkey|new/verify`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify(payload),
         },
-        body: JSON.stringify(payload),
-      })
+      )
       const result = await response.json()
       if (!response.ok) {
         console.log("Error:", result)
