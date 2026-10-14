@@ -88,6 +88,18 @@ export default function Page() {
     }
   }
 
+  async function getAnonymousAccessTokenSilently() {
+    try {
+      const { accessToken } = await client.anonymous.getTokenSilently({ audience: config.default_audience || "" })
+      setState({
+        ...state,
+        accessToken,
+      })
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
   async function deleteAnonymousSession() {
     try {
       await client.anonymous.logout()
@@ -230,7 +242,7 @@ export default function Page() {
             href={document.location.origin + "/spa/auth0-spa-js?use_ort=true"}
             className="text-primary no-underline text-sm break-all hover:underline"
           >
-            Use Online Refresh Token
+            Use online refresh token
           </a>
         </p>
       </section>
@@ -242,7 +254,15 @@ export default function Page() {
               className="border-0 rounded-sm cursor-pointer text-base py-3 px-6 m-1 transition-colors bg-primary text-white hover:bg-blue-700"
               onClick={createAnonymousSession}
             >
-              Create Anonymous Session
+              Create anonymous session
+            </button>
+          </li>
+          <li className="mb-3 mt-2">
+            <button
+              className="border-0 rounded-sm cursor-pointer transition-colors bg-secondary text-white text-sm py-2 px-4 m-1 hover:bg-gray-700"
+              onClick={getAnonymousAccessTokenSilently}
+            >
+              Get anonymous access token silently
             </button>
           </li>
           <li className="mb-3 mt-2">
@@ -250,7 +270,7 @@ export default function Page() {
               className="border-0 rounded-sm cursor-pointer text-base py-3 px-6 m-1 transition-colors bg-danger text-white hover:bg-red-700"
               onClick={deleteAnonymousSession}
             >
-              Delete Anonymous Session
+              Delete anonymous session
             </button>
           </li>
         </ul>
