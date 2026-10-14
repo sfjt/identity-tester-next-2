@@ -37,10 +37,8 @@ src/
 │   │       └── sms/       # SMS MFA enrollment & verification
 │   ├── mfa/               # MFA testing UI components
 │   ├── rwa/               # Regular Web Application testing
-│   └── spa/               # Single Page Application testing
-│       ├── auth0-js/      # Auth0.js SDK integration
-│       ├── auth0-lock/    # Auth0 Lock widget integration
-│       └── auth0-spa-js/  # Auth0 SPA JS SDK integration
+│   └── auth0-spa-js/       # Single Page Application testing
+│
 ├── components/            # Shared React components
 └── lib/                   # Auth0 configuration and utilities
 ```

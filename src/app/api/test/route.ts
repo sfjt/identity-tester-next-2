@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server"
 import * as jose from "jose"
 
-const AUTH0_DOMAIN = process.env.AUTH0_DOMAIN as string
-const DEFAULT_AUDIENCE = process.env.DEFAULT_AUDIENCE as string
+const AUTH0_DOMAIN = process.env.NEXT_PUBLIC_AUTH0_DOMAIN as string
+const DEFAULT_AUDIENCE = process.env.NEXT_PUBLIC_DEFAULT_AUDIENCE as string
 
 export const GET = async (req: NextRequest) => {
   const authHeader = req.headers.get("Authorization")

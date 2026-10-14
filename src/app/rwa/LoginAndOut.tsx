@@ -1,30 +1,17 @@
 "use client"
 
-import useSWRImmutable from "swr/immutable"
 import { useState } from "react"
 import type { ChangeEvent } from "react"
 
-import fetchConfig from "@/lib/fetch-config"
-
 export default function LoginAndOut() {
-  const { data, error, isLoading } = useSWRImmutable("/api/config", fetchConfig)
 
   const [state, setState] = useState({
     params: new URLSearchParams(),
     editorVisible: false,
   })
 
-  if (error) {
-    console.error(error)
-    return <p className="text-danger bg-red-100 p-4 rounded-sm my-4">Something went wrong.</p>
-  }
-
-  if (isLoading || !data) {
-    return <p className="text-center text-gray-600 p-5">Loading...</p>
-  }
-
-  const v2LogoutURL = `https://${data.auth0_domain}/v2/logout`
-  const oidcLogoutURL = `https://${data.auth0_domain}/oidc/logout`
+  const v2LogoutURL = `https://${process.env.NEXT_PUBLIC_AUTH0_DOMAIN}/v2/logout`
+  const oidcLogoutURL = `https://${process.env.NEXT_PUBLIC_AUTH0_DOMAIN}/oidc/logout`
 
   function login() {
     window.location.href = addParams("/auth/login")
@@ -39,8 +26,8 @@ export default function LoginAndOut() {
     if (!params.has("returnTo")) {
       params.append("returnTo", window.location.href)
     }
-    if (!params.has("audience") && typeof data.default_audience === "string") {
-      params.append("audience", data.default_audience)
+    if (!params.has("audience") && typeof process.env.NEXT_PUBLIC_DEFAULT_AUDIENCE === "string") {
+      params.append("audience", process.env.NEXT_PUBLIC_DEFAULT_AUDIENCE)
     }
     return `${route}?${params.toString()}`
   }

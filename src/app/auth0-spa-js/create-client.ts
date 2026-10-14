@@ -1,17 +1,14 @@
 import { createAuth0Client, RefreshTokenMode } from "@auth0/auth0-spa-js"
 import type { IdToken } from "@auth0/auth0-spa-js"
 
-import fetchConfig from "@/lib/fetch-config"
-
 export async function createClient() {
-  const config = await fetchConfig()
   const clientParams: any = {
-    domain: config.auth0_domain,
-    clientId: config.spa_client_id,
+    domain: process.env.NEXT_PUBLIC_AUTH0_DOMAIN,
+    clientId: process.env.NEXT_PUBLIC_SPA_CLIENT_ID,
     useRefreshTokens: true,
     authorizationParams: {
-      redirect_uri: document.location.origin + "/spa/auth0-spa-js",
-      audience: config.default_audience,
+      redirect_uri: document.location.origin + "/auth0-spa-js",
+      audience: process.env.NEXT_PUBLIC_DEFAULT_AUDIENCE,
     },
   }
 
@@ -21,7 +18,7 @@ export async function createClient() {
     console.log("SWR: using online refresh token mode")
     clientParams.useDpop = true
     clientParams.refreshTokenMode = RefreshTokenMode.Online
-    clientParams.authorizationParams.redirect_uri = document.location.origin + "/spa/auth0-spa-js?use_ort=true"
+    clientParams.authorizationParams.redirect_uri = document.location.origin + "/auth0-spa-js?use_ort=true"
   }
 
   const client = await createAuth0Client(clientParams)
@@ -57,7 +54,6 @@ export async function createClient() {
   }
 
   return {
-    config,
     client,
     idToken,
     accessToken,

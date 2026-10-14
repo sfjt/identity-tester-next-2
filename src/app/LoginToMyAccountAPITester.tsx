@@ -4,8 +4,8 @@ export default function LoginToMyAccountAPITester() {
       href={
         "/auth/login?" +
         new URLSearchParams({
-          returnTo: `${process.env.APP_BASE_URL}/my-account`,
-          audience: `https://${process.env.AUTH0_DOMAIN}/me/`,
+          returnTo: `${process.env.NEXT_PUBLIC_APP_BASE_URL}/my-account`,
+          audience: `https://${process.env.NEXT_PUBLIC_AUTH0_DOMAIN}/me/`,
           scope:
             "openid profile email enroll offline_access create:me:authentication_methods read:me:authentication_methods update:me:authentication_methods delete:me:authentication_methods read:me:factors",
         })

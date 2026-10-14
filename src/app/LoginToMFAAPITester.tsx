@@ -4,7 +4,7 @@ export default function LoginToMFATester() {
       href={
         "/auth/login?" +
         new URLSearchParams({
-          returnTo: `${process.env.APP_BASE_URL}/mfa`,
+          returnTo: `${process.env.NEXT_PUBLIC_APP_BASE_URL}/mfa`,
           audience: process.env.MFA_API_AUDIENCE || "",
           scope: "openid profile email enroll offline_access read:authenticators remove:authenticators",
         })

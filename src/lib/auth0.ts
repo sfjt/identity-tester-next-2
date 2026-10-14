@@ -46,6 +46,8 @@ async function executeTasksWithErrorAggregation(tasks: Promise<void>[]): Promise
 }
 
 export const auth0 = new Auth0Client({
+  domain: process.env.NEXT_PUBLIC_AUTH0_DOMAIN || "",
+  appBaseUrl: process.env.NEXT_PUBLIC_APP_BASE_URL || "",
   logoutStrategy: "oidc",
   sessionStore: {
     async get(id) {

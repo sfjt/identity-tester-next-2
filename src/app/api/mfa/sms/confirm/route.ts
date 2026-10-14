@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "OOB code, MFA token, and binding code are required" }, { status: 400 })
     }
 
-    const domain = process.env.AUTH0_DOMAIN
+    const domain = process.env.NEXT_PUBLIC_AUTH0_DOMAIN
     const clientId = process.env.AUTH0_CLIENT_ID
     const clientSecret = process.env.AUTH0_CLIENT_SECRET
 

@@ -43,7 +43,7 @@ export default function Page() {
     )
   }
 
-  const { client, config } = data
+  const { client } = data
 
   function login() {
     client.loginWithRedirect({ authorizationParams: { ...state.params } })
@@ -73,7 +73,7 @@ export default function Page() {
   async function createAnonymousSession() {
     try {
       const { accessToken, sessionToken } = await client.anonymous.createSession({
-        audience: config.default_audience || "",
+        audience: process.env.NEXT_PUBLIC_DEFAULT_AUDIENCE || "",
         metadata: {
           ...state.params,
         },
@@ -90,7 +90,7 @@ export default function Page() {
 
   async function getAnonymousAccessTokenSilently() {
     try {
-      const { accessToken } = await client.anonymous.getTokenSilently({ audience: config.default_audience || "" })
+      const { accessToken } = await client.anonymous.getTokenSilently({ audience: process.env.NEXT_PUBLIC_DEFAULT_AUDIENCE || "" })
       setState({
         ...state,
         accessToken,

@@ -9,13 +9,13 @@ interface EnrollmentState {
   error?: string
 }
 
-export default function PasskeyEnrollment({ config }: { config: any }) {
+export default function PasskeyEnrollment() {
   const [enrollmentState, setEnrollmentState] = useState<EnrollmentState>({ status: "default" })
 
   const initiatePasskeyEnrollment = async () => {
     const accessToken = await getAccessToken()
     try {
-      const response = await fetch(`https://${config.auth0_domain}/me/v1/authentication-methods`, {
+      const response = await fetch(`https://${process.env.NEXT_PUBLIC_AUTH0_DOMAIN}/me/v1/authentication-methods`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -80,7 +80,7 @@ export default function PasskeyEnrollment({ config }: { config: any }) {
           },
         },
       }
-      const response = await fetch(`https://${config.auth0_domain}/me/v1/authentication-methods/passkey|new/verify`, {
+      const response = await fetch(`https://${process.env.NEXT_PUBLIC_AUTH0_DOMAIN}/me/v1/authentication-methods/passkey|new/verify`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

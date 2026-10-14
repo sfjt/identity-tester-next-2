@@ -4,11 +4,9 @@ import { useState } from "react"
 import useSWR from "swr"
 
 import { getAccessToken } from "@auth0/nextjs-auth0"
-import fetchConfig from "@/lib/fetch-config"
 
 async function getAuthenticators() {
-  const config = await fetchConfig()
-  const url = `https://${config.auth0_domain}/mfa/authenticators`
+  const url = `https://${process.env.NEXT_PUBLIC_AUTH0_DOMAIN}/mfa/authenticators`
   const token = await getAccessToken()
   const res = await fetch(url, {
     headers: {
@@ -74,8 +72,7 @@ export default function Authenticators() {
     setDeletingIds((prev) => new Set(prev).add(authenticatorId))
 
     try {
-      const config = await fetchConfig()
-      const url = `https://${config.auth0_domain}/mfa/authenticators/${authenticatorId}`
+      const url = `https://${process.env.NEXT_PUBLIC_AUTH0_DOMAIN}/mfa/authenticators/${authenticatorId}`
       const token = await getAccessToken()
 
       const response = await fetch(url, {

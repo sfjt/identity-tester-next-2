@@ -3,7 +3,6 @@
 import { useReducer } from "react"
 import { getAccessToken } from "@auth0/nextjs-auth0"
 import { mutate } from "swr"
-import fetchConfig from "@/lib/fetch-config"
 
 interface EnrollmentData {
   authenticator_type: string
@@ -146,8 +145,7 @@ export default function SMSEnrollment() {
     dispatch({ type: "START_ENROLLMENT" })
 
     try {
-      const config = await fetchConfig()
-      const url = `https://${config.auth0_domain}/mfa/associate`
+      const url = `https://${process.env.NEXT_PUBLIC_AUTH0_DOMAIN}/mfa/associate`
 
       const token = await getAccessToken()
 
