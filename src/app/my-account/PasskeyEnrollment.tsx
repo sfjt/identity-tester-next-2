@@ -91,7 +91,12 @@ export default function PasskeyEnrollment({ config }: { config: any }) {
       const result = await response.json()
       if (!response.ok) {
         console.log("Error:", result)
-        setEnrollmentState({ ...enrollmentState, status: "error", error: result.error, enrollmentInfo: payload || "Passkey enrollment failed" })
+        setEnrollmentState({
+          ...enrollmentState,
+          status: "error",
+          error: result.error,
+          enrollmentInfo: payload || "Passkey enrollment failed",
+        })
         return
       }
     } catch (error) {
