@@ -28,6 +28,9 @@ export default function LoginAndOut() {
     if (!params.has("audience") && typeof process.env.NEXT_PUBLIC_DEFAULT_AUDIENCE === "string") {
       params.append("audience", process.env.NEXT_PUBLIC_DEFAULT_AUDIENCE)
     }
+    if (!params.has("scope") && typeof process.env.NEXT_PUBLIC_DEFAULT_AUDIENCE === "string") {
+      params.append("scope", "openid profile email offline_access test:api")
+    }
     return `${route}?${params.toString()}`
   }
 

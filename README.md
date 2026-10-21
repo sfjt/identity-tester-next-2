@@ -29,4 +29,5 @@ This is a demonstration and testing application for Auth0 authentication flows. 
   - Toggle on Require Token Sender-Constraining
 - **APIs**
   - Create an API in your Auth0 tenant with the identifier `https://api.test/`
+    - Create permissions `test:api` (User Delegated Access) and `test:anon` (Anonymous Access).
 - Start the server by executing `npm run dev`

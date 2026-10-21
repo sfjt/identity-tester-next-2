@@ -73,10 +73,9 @@ export default function Page() {
   async function createAnonymousSession() {
     try {
       const { accessToken, sessionToken } = await client.anonymous.createSession({
+        ...state.params,
         audience: process.env.NEXT_PUBLIC_DEFAULT_AUDIENCE || "",
-        metadata: {
-          ...state.params,
-        },
+        scope: "test:anon"
       })
       setState({
         ...state,
@@ -92,6 +91,7 @@ export default function Page() {
     try {
       const { accessToken } = await client.anonymous.getTokenSilently({
         audience: process.env.NEXT_PUBLIC_DEFAULT_AUDIENCE || "",
+        scope: "test:anon"
       })
       setState({
         ...state,
