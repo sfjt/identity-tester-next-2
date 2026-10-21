@@ -18,7 +18,7 @@ interface IState {
 }
 
 export default function Page() {
-  const { data, error, isLoading } = useSWRImmutable("/spa/auth0-spa-js", createClient)
+  const { data, error, isLoading } = useSWRImmutable("/auth0-spa-js", createClient)
   const [state, setState] = useState<IState>({
     idToken: undefined,
     accessToken: undefined,
@@ -65,7 +65,7 @@ export default function Page() {
     client.logout({
       logoutParams: {
         ...state.params,
-        returnTo: document.location.origin + "/spa/auth0-spa-js",
+        returnTo: document.location.origin + "/auth0-spa-js",
       },
     })
   }
@@ -241,7 +241,7 @@ export default function Page() {
         </ul>
         <p>
           <a
-            href={document.location.origin + "/spa/auth0-spa-js?use_ort=true"}
+            href={document.location.origin + "/auth0-spa-js?use_ort=true"}
             className="text-primary no-underline text-sm break-all hover:underline"
           >
             Use online refresh token
