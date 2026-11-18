@@ -35,5 +35,5 @@ test("login", async ({ page }) => {
     await page.getByRole("button", { name: "Accept" }).click()
   }
 
-  expect(page.getByText("(Logged in.)")).toBeVisible()
+  await expect(page.getByText("(Logged in.)")).toBeVisible()
 })
